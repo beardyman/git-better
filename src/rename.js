@@ -1,18 +1,28 @@
 const git = require('simple-git/promise')();
-const utils = require('../src/utils');
+const Branch = require('./model/branch');
 
-async function rename(newName) {
+async function rename(newName, opts = {}) {
   const branches = await git.branch()
-  console.log(branches);
 
   // does the new name include the namespace?
   // (can't switch namespaces because it would mess up the base if the branch was created from a different base)
-  const newBranch = utils.parseBranch(newName);
-  const currentBranch = utils.parseBranch(branches.current)
+  const newBranch = new Branch(newName);
+  const currentBranch = new Branch(branches.current);
 
-  console.log(newBranch, currentBranch);
+  if(newBranch.namespace && newBranch.namespace !== currentBranch.namespace) {
+    throw new Error('Cannot rename to a new namespace')
+  }
 
-  console.log(`Renaming ${branches.current} to ${newName}`);
+  newBranch.namespace = currentBranch.namespace;
+
+  console.log(`Renaming ${currentBranch} to ${newBranch}`);
+
+  await git.checkoutBranch(newBranch.toString(), currentBranch.toString());
+  await git.deleteLocalBranch(currentBranch.toString());
+
+  if (opts.push) {
+    await git.push('origin', undefined, {'--delete': currentBranch.toString()})
+  }
 }
 
 module.exports = rename;
