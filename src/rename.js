@@ -15,7 +15,7 @@ async function rename(newName, opts = {}) {
 
   newBranch.namespace = currentBranch.namespace;
 
-  console.log(`Renaming ${currentBranch} to ${newBranch}`);
+  console.log(`Renaming branch ${currentBranch} to ${newBranch}`);
 
   await git.checkoutBranch(newBranch.toString(), currentBranch.toString());
   await git.deleteLocalBranch(currentBranch.toString());
