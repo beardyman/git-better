@@ -10,9 +10,10 @@ async function rename(newName, opts = {}) {
   const currentBranch = new Branch(branches.current);
 
   if(newBranch.namespace && newBranch.namespace !== currentBranch.namespace) {
-    throw new Error('Cannot rename to a new namespace')
+    throw new Error('Cannot rename branch to a new namespace')
   }
 
+  // in case the user didn't pass the namespace
   newBranch.namespace = currentBranch.namespace;
 
   console.log(`Renaming branch ${currentBranch} to ${newBranch}`);
@@ -21,7 +22,8 @@ async function rename(newName, opts = {}) {
   await git.deleteLocalBranch(currentBranch.toString());
 
   if (opts.push) {
-    await git.push('origin', undefined, {'--delete': currentBranch.toString()})
+    await git.push('origin', newBranch.toString())
+    await git.push('origin', currentBranch.toString(), {'--delete': currentBranch.toString()})
   }
 }
 

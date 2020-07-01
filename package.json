@@ -6,7 +6,10 @@
     "git-rename": "./bin/git-rename.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:base": "mocha --recursive test/unit/",
+    "test:cov": "nyc -r lcov -r text-summary  --report-dir test/reports/unit/ npm run test:base",
+    "test": "npm run test:cov -- -- --watch",
+    "test:ci": "npm run test:cov"
   },
   "keywords": [],
   "author": "",
