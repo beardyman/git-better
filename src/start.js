@@ -12,15 +12,18 @@ const _ = require('lodash');
  * @returns {Promise<void>}
  */
 module.exports = async function start(branch) {
+
+  if(!await utils.isClean()) {
+    throw new Error('Current workspace is not clean.  Please commit, stash, or revert current changes.');
+  }
+
   const baseBranch = await getBaseBranch(branch);
 
-  const res = await utils.isClean();
-  console.log(res);
-
-
   // checkout the base branch and update it
-  // create a new branch from the base branch
+  await git.pull('origin', baseBranch);
 
+  // create a new branch from the base branch
+  await git.checkoutBranch(branch.toString(), `origin/${baseBranch}`);
 }
 
 /**

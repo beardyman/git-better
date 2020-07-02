@@ -1,6 +1,13 @@
 const git = require('simple-git/promise')();
 const Branch = require('./model/branch');
 
+/**
+ * Renames a branch to a new name by creating a new branch and deleting the old one.
+ *
+ * @param newName
+ * @param opts
+ * @returns {Promise<void>}
+ */
 async function rename(newName, opts = {}) {
   const branches = await git.branch()
 

@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "bin": {
-    "git-rename": "./bin/git-rename.js"
+    "git-rename": "./bin/git-rename.js",
+    "git-start": "./bin/git-start.js",
+    "git-update": "./bin/git-update.js"
   },
   "scripts": {
     "test:base": "mocha --recursive test/unit/",
