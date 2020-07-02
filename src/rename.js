@@ -6,8 +6,8 @@ async function rename(newName, opts = {}) {
 
   // does the new name include the namespace?
   // (can't switch namespaces because it would mess up the base if the branch was created from a different base)
-  const newBranch = new Branch(newName);
-  const currentBranch = new Branch(branches.current);
+  const newBranch = Branch.fromFullBranchName(newName);
+  const currentBranch = Branch.fromFullBranchName(branches.current);
 
   if(newBranch.namespace && newBranch.namespace !== currentBranch.namespace) {
     throw new Error('Cannot rename branch to a new namespace')
