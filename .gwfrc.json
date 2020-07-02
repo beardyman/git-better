@@ -1,0 +1,19 @@
+{
+	"defaultBase": "main",
+	"defaultStrategy": "merge",
+	"defaultRemote": "origin",
+	"alwaysPush": false,
+	"workflows": {
+		"feature": {
+			"from": "develop",
+			"to": "develop"
+		},
+		"hotfix": {
+			"from": "master",
+			"to": [ "master", "develop" ]
+		}
+	},
+	"promotionPaths": {
+		"develop": "master"
+	}
+}

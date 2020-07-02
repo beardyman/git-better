@@ -1,0 +1,6 @@
+{
+  "defaultBase": "master",
+  "defaultStrategy": "merge",
+  "defaultRemote": "origin",
+  "alwaysPush": false
+}
