@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "bin": {
+
+    "git-finish": "./bin/git-finish.js",
     "git-rename": "./bin/git-rename.js",
     "git-start": "./bin/git-start.js",
     "git-update": "./bin/git-update.js"
