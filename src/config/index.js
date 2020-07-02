@@ -18,6 +18,6 @@ module.exports.getConfig = async () => {
   const defaultConfig = require('./default.json')
 
   // merge them
-  return _.merge(globalConfig, repoConfig);
+  return _.merge(defaultConfig, globalConfig, repoConfig);
 };
 

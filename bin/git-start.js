@@ -3,6 +3,10 @@
 const argv = require('minimist')(process.argv.slice(2));
 const Branch = require('../src/model/branch');
 
-require('../src/start')().then(()=>{
-  process.exit(0);
-})
+require('../src/start')(Branch.fromFullBranchName(argv._.join('/')))
+  .then(()=>{
+    process.exit(0);
+  }).catch((err) =>{
+    console.log(err.message);
+    process.exit(255);
+  });
