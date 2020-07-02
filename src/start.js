@@ -1,6 +1,7 @@
 const git = require('simple-git/promise')();
 const Branch = require('./model/branch');
 const {getConfig} = require('./config');
+const utils = require('./utils');
 const _ = require('lodash');
 
 /**
@@ -13,7 +14,8 @@ const _ = require('lodash');
 module.exports = async function start(branch) {
   const baseBranch = await getBaseBranch(branch);
 
-  git.clean('n')
+  const res = await utils.isClean();
+  console.log(res);
 
 
   // checkout the base branch and update it

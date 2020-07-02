@@ -15,7 +15,7 @@ module.exports.getConfig = async () => {
   const repoConfig = fs.existsSync(repoConfigFile) ? require(repoConfigFile) : {};
 
   // get default config
-  const defaultConfig = require('config/default.json')
+  const defaultConfig = require('./default.json')
 
   // merge them
   return _.merge(globalConfig, repoConfig);
