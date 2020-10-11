@@ -9,11 +9,11 @@
 			"to": "develop"
 		},
 		"hotfix": {
-			"from": "master",
-			"to": [ "master", "develop" ]
+			"from": "main",
+			"to": [ "main", "develop" ]
 		}
 	},
 	"promotionPaths": {
-		"develop": "master"
+		"develop": "main"
 	}
 }

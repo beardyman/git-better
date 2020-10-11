@@ -9,16 +9,18 @@ module.exports = async function update(opts) {
 
   const branches = await git.branch();
   const currentBranch = Branch.fromFullBranchName(branches.current);
-
-
-  // make sure the base branch is up to date
   const baseBranch = await utils.getBaseBranch(currentBranch);
-  await git.pull(config.defaultRemote, baseBranch);
-  await git.mergeFromTo(`${config.defaultRemote}/${baseBranch}`, baseBranch);
 
   if (opts.logger) {
     opts.logger(`Updating ${currentBranch.toString()} from ${baseBranch.toString()}`);
   }
+
+  // make sure the base branch is up to date
+  await git.checkout(baseBranch);
+  await git.pull(config.defaultRemote, baseBranch);
+
+  // go back to the current branch
+  await git.checkout(currentBranch.toString());
 
   // merge the base branch into the current branch
   await git.mergeFromTo(baseBranch, currentBranch.toString());
