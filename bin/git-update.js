@@ -3,4 +3,6 @@
 const wrapper = require('./shell-wrapper');
 const update = require('../src/update');
 
-wrapper(update);
+wrapper((argv) => {
+  return update({logger: console.log, ...argv});
+});

@@ -6,8 +6,7 @@
     "git-finish": "./bin/git-finish.js",
     "git-rename": "./bin/git-rename.js",
     "git-start": "./bin/git-start.js",
-    "git-update": "./bin/git-update.js",
-    "test": "./bin/wrap-test"
+    "git-update": "./bin/git-update.js"
   },
   "scripts": {
     "test:base": "mocha --recursive test/unit/",
@@ -23,7 +22,8 @@
     "@octokit/rest": "^18.0.6",
     "lodash": "^4.17.20",
     "minimist": "^1.2.5",
-    "simple-git": "^2.21.0"
+    "simple-git": "^2.21.0",
+    "update-notifier": "^5.0.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",

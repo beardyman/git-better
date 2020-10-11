@@ -4,7 +4,7 @@ const Branch = require('./model/branch');
 const { getConfig } = require('./config');
 const utils = require('./utils');
 
-module.exports = async function update() {
+module.exports = async function update(opts) {
   const config = await getConfig();
 
   const branches = await git.branch();
@@ -16,7 +16,9 @@ module.exports = async function update() {
   await git.pull(config.defaultRemote, baseBranch);
   await git.mergeFromTo(`${config.defaultRemote}/${baseBranch}`, baseBranch);
 
-  console.log(`Updating ${currentBranch.toString()} from ${baseBranch.toString()}`);
+  if (opts.logger) {
+    opts.logger(`Updating ${currentBranch.toString()} from ${baseBranch.toString()}`);
+  }
 
   // merge the base branch into the current branch
   await git.mergeFromTo(baseBranch, currentBranch.toString());

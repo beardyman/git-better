@@ -6,5 +6,5 @@ const rename = require('../src/rename');
 wrapper((argv) => {
 
   // get the new branch name and pass the options
-  return rename(argv._[0], argv);
+  return rename(argv._[0], {logger: console.log, ...argv});
 })

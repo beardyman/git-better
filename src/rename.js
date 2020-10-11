@@ -4,8 +4,8 @@ const Branch = require('./model/branch');
 /**
  * Renames a branch to a new name by creating a new branch and deleting the old one.
  *
- * @param newName
- * @param opts
+ * @param {string} newName
+ * @param {Object} opts
  * @returns {Promise<void>}
  */
 async function rename(newName, opts = {}) {
@@ -23,7 +23,9 @@ async function rename(newName, opts = {}) {
   // in case the user didn't pass the namespace
   newBranch.namespace = currentBranch.namespace;
 
-  console.log(`Renaming branch ${currentBranch} to ${newBranch}`);
+  if (opts.logger) {
+    opts.logger(`Renaming branch ${currentBranch} to ${newBranch}`);
+  }
 
   await git.checkoutBranch(newBranch.toString(), currentBranch.toString());
   await git.deleteLocalBranch(currentBranch.toString());
