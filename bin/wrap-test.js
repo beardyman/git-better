@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const wrapper = require('./shell-wrapper');
-const finish = require('../src/finish');
 
-wrapper(finish);
+wrapper((argv) => {
+  console.log(argv);
+})

@@ -33,4 +33,8 @@ utils.getBaseBranch = async (branch) => {
   return config.defaultBase;
 }
 
+utils.updateFromBase = async () => {
+
+}
+
 module.exports = utils;

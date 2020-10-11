@@ -8,9 +8,10 @@ const utils = require('./utils');
  * branch
  *
  * @param {Branch} branch - Branch data object representing the branch to start
+ * @param {Object} options - Start options
  * @returns {Promise<void>}
  */
-module.exports = async function start(branch) {
+module.exports = async function start(branch, options) {
 
   if(!await utils.isClean()) {
     throw new Error('Current workspace is not clean.  Please commit, stash, or revert current changes and try again.');

@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
-const argv = require('minimist')(process.argv.slice(2));
+const wrapper = require('./shell-wrapper');
+const rename = require('../src/rename');
 
-require('../src/rename')(argv._[0], argv)
-  .then(()=>{
-    process.exit(0);
-  }).catch((err) =>{
-    console.log(err.message);
-    process.exit(255);
-  });
+wrapper((argv) => {
+
+  // get the new branch name and pass the options
+  return rename(argv._[0], argv);
+})

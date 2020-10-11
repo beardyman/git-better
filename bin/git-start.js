@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 
-const argv = require('minimist')(process.argv.slice(2));
+const wrapper = require('./shell-wrapper');
+const start = require('../src/start');
 const Branch = require('../src/model/branch');
 
-require('../src/start')(Branch.fromFullBranchName(argv._.join('/')))
-  .then(()=>{
-    process.exit(0);
-  }).catch((err) =>{
-    console.log(err.message);
-    process.exit(255);
-  });
+wrapper((argv) => {
+  
+  // extract the branch name and pass it to the script
+  return start(Branch.fromFullBranchName(argv._.join('/')), argv);
+})
