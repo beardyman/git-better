@@ -19,10 +19,11 @@ module.exports = async function start(branch, options) {
 
   const config = await getConfig();
   const baseBranch = await utils.getBaseBranch(branch);
+  const remote = options.remote || config.defaultRemote;
 
   // pull the base branch and update it
   await git.checkout(baseBranch);
-  await git.pull(config.defaultRemote, baseBranch);
+  await git.pull(remote, baseBranch);
 
   // create a new branch from the base branch
   await git.checkoutBranch(branch.toString(), baseBranch);

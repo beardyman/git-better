@@ -4,20 +4,21 @@ const Branch = require('./model/branch');
 const { getConfig } = require('./config');
 const utils = require('./utils');
 
-module.exports = async function update(opts) {
+module.exports = async function update(options) {
   const config = await getConfig();
 
   const branches = await git.branch();
   const currentBranch = Branch.fromFullBranchName(branches.current);
   const baseBranch = await utils.getBaseBranch(currentBranch);
+  const remote = options.remote || config.defaultRemote;
 
-  if (opts.logger) {
-    opts.logger(`Updating ${currentBranch.toString()} from ${baseBranch.toString()}`);
+  if (options.logger) {
+    options.logger(`Updating ${currentBranch.toString()} from ${baseBranch.toString()}`);
   }
 
   // make sure the base branch is up to date
   await git.checkout(baseBranch);
-  await git.pull(config.defaultRemote, baseBranch);
+  await git.pull(remote, baseBranch);
 
   // go back to the current branch
   await git.checkout(currentBranch.toString());

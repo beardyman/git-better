@@ -3,7 +3,7 @@ const os = require('os');
 const fs = require('fs');
 const _ = require('lodash');
 const configFileName = '.gwfrc.json'
-
+module.exports.configFileName = configFileName;
 module.exports.getConfig = async () => {
   // get global user config
   const userHomeConfig = `${os.homedir()}/${configFileName}`;
