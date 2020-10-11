@@ -1,5 +1,6 @@
 const git = require('simple-git/promise')();
 const Branch = require('./model/branch');
+const { getConfig } = require('./config');
 
 /**
  * Renames a branch to a new name by creating a new branch and deleting the old one.
@@ -32,9 +33,9 @@ async function rename(newName, options = {}) {
   await git.checkoutBranch(newBranch.toString(), currentBranch.toString());
   await git.deleteLocalBranch(currentBranch.toString());
 
-  if (config.alwaysPush || opts.push) {
+  if (config.alwaysPush || options.push) {
     await git.push(remote, newBranch.toString())
-    await git.push(remote, currentBranch.toString(), {'--delete': currentBranch.toString()})
+    await git.push(remote, currentBranch.toString(), {'--delete': undefined})
   }
 }
 
