@@ -4,7 +4,7 @@ const utils = require('./utils');
 const { getConfig } = require('./config');
 const _ = require('lodash');
 
-module.exports = async function finish(options) {
+module.exports = async function finish(options = {}) {
   const config = await getConfig();
   const branches = await git.branch();
   const currentBranch = Branch.fromFullBranchName(branches.current);

@@ -1,10 +1,13 @@
-const expect = require('chai').expect;
+
+const chai = require('chai').use(require('chai-as-promised'));
+const expect = chai.expect;
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
 
 
 describe('Rename', () => {
-  let rename;
+  let rename
+    , getConfig;
 
 
   beforeEach(()=>{
@@ -17,10 +20,13 @@ describe('Rename', () => {
       branch: sinon.stub().resolves({current: 'ns/cBranch'}),
     };
 
+    getConfig = sinon.stub().resolves({alwaysPush: false, defaultRemote: 'origin'});
+
     sinon.stub(console, 'log');
 
     rename = proxyquire('../../../src/rename', {
       'simple-git/promise': () => git,
+      './config': {getConfig},
       './model/branch': {fromFullBranchName}
     });
   });
@@ -33,9 +39,7 @@ describe('Rename', () => {
     fromFullBranchName.onCall(0).returns({namespace:'a'});
     fromFullBranchName.onCall(1).returns({namespace:'b'});
 
-    return rename('spaces/newBranch').then(() => {
-      throw new Error('should have thrown');
-    }).catch((err)=>{
+    return expect(rename('spaces/newBranch')).to.be.rejected.then((err) => {
       expect(git.branch.callCount).to.equal(1);
       expect(console.log.callCount).to.equal(0);
       expect(err.message).to.equal('Cannot rename branch to a new namespace');
@@ -46,10 +50,26 @@ describe('Rename', () => {
     fromFullBranchName.onCall(0).returns({namespace:'a', branch: 'c', toString: sinon.stub().returns('a/c')});
     fromFullBranchName.onCall(1).returns({namespace:'a', branch: 'b', toString: sinon.stub().returns('a/b')});
 
-    return rename('spaces/newBranch').then(() => {
+    return rename('spaces/newBranch', {logger: console.log}).then(() => {
       expect(git.branch.callCount).to.equal(1);
       expect(console.log.callCount).to.equal(1);
       expect(console.log.args[0][0]).to.equal('Renaming branch a/b to a/c');
+      expect(git.checkoutBranch.callCount).to.equal(1);
+      expect(git.checkoutBranch.args[0][0]).to.equal('a/c');
+      expect(git.checkoutBranch.args[0][1]).to.equal('a/b');
+      expect(git.deleteLocalBranch.callCount).to.equal(1);
+      expect(git.deleteLocalBranch.args[0][0]).to.equal('a/b');
+      expect(git.push.callCount).to.equal(0);
+    });
+  });
+
+  it('shouldn\'t log if no logger is passed', () => {
+    fromFullBranchName.onCall(0).returns({namespace:'a', branch: 'c', toString: sinon.stub().returns('a/c')});
+    fromFullBranchName.onCall(1).returns({namespace:'a', branch: 'b', toString: sinon.stub().returns('a/b')});
+
+    return rename('spaces/newBranch', {}).then(() => {
+      expect(git.branch.callCount).to.equal(1);
+      expect(console.log.callCount).to.equal(0);
       expect(git.checkoutBranch.callCount).to.equal(1);
       expect(git.checkoutBranch.args[0][0]).to.equal('a/c');
       expect(git.checkoutBranch.args[0][1]).to.equal('a/b');
@@ -63,7 +83,7 @@ describe('Rename', () => {
     fromFullBranchName.onCall(0).returns({branch: 'c', toString: sinon.stub().returns('a/c')});
     fromFullBranchName.onCall(1).returns({namespace:'a', branch: 'b', toString: sinon.stub().returns('a/b')});
 
-    return rename('spaces/newBranch').then(() => {
+    return rename('spaces/newBranch', {logger: console.log}).then(() => {
       expect(git.branch.callCount).to.equal(1);
       expect(console.log.callCount).to.equal(1);
       expect(console.log.args[0][0]).to.equal('Renaming branch a/b to a/c');
@@ -80,7 +100,7 @@ describe('Rename', () => {
     fromFullBranchName.onCall(0).returns({namespace:'a', branch: 'c', toString: sinon.stub().returns('a/c')});
     fromFullBranchName.onCall(1).returns({namespace:'a', branch: 'b', toString: sinon.stub().returns('a/b')});
 
-    return rename('spaces/newBranch', {push: true}).then(() => {
+    return rename('spaces/newBranch', {logger: console.log, push: true}).then(() => {
       expect(git.branch.callCount).to.equal(1);
       expect(console.log.callCount).to.equal(1);
       expect(console.log.args[0][0]).to.equal('Renaming branch a/b to a/c');
@@ -98,7 +118,7 @@ describe('Rename', () => {
       // delete the old branch
       expect(git.push.args[1][0]).to.equal('origin');
       expect(git.push.args[1][1]).to.equal('a/b');
-      expect(git.push.args[1][2]).to.deep.equal({'--delete': 'a/b'});
+      expect(git.push.args[1][2]).to.deep.equal({'--delete': undefined});
     });
   });
 

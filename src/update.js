@@ -4,7 +4,7 @@ const Branch = require('./model/branch');
 const { getConfig } = require('./config');
 const utils = require('./utils');
 
-module.exports = async function update(options) {
+module.exports = async function update(options = {}) {
   const config = await getConfig();
 
   const branches = await git.branch();
