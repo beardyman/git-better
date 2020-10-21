@@ -3,6 +3,4 @@
 const wrapper = require('./shell-wrapper');
 const promote = require('../src/promote');
 
-wrapper((argv) => {
-  return promote({logger: console.log, ...argv});
-})
+wrapper((argv) => promote({logger: console.log, ...argv}));

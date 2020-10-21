@@ -3,5 +3,9 @@
 
 // link to other code
 module.exports = {
-  rename: require('./src/rename')
+  finish: require('./src/finish'),
+  promote: require('./src/promote'),
+  rename: require('./src/rename'),
+  start: require('./src/start'),
+  update: require('./src/update')
 };

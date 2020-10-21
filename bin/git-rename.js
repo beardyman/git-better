@@ -3,8 +3,8 @@
 const wrapper = require('./shell-wrapper');
 const rename = require('../src/rename');
 
-wrapper((argv) => {
+wrapper((argv) =>
 
   // get the new branch name and pass the options
-  return rename(argv._[0], {logger: console.log, ...argv});
-})
+  rename(argv._[0], {logger: console.log, ...argv})
+);

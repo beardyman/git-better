@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
@@ -7,17 +8,19 @@ const proxyquire = require('proxyquire');
 
 describe('Rename', () => {
   let rename
-    , getConfig;
+    , getConfig
+    , git
+    , fromFullBranchName;
 
 
-  beforeEach(()=>{
+  beforeEach(() => {
     fromFullBranchName = sinon.stub();
 
     git = {
       checkoutBranch: sinon.stub().resolves(),
       deleteLocalBranch: sinon.stub().resolves(),
       push: sinon.stub().resolves(),
-      branch: sinon.stub().resolves({current: 'ns/cBranch'}),
+      branch: sinon.stub().resolves({current: 'ns/cBranch'})
     };
 
     getConfig = sinon.stub().resolves({alwaysPush: false, defaultRemote: 'origin'});
@@ -36,8 +39,8 @@ describe('Rename', () => {
   });
 
   it('should reject when switching namespaces', () => {
-    fromFullBranchName.onCall(0).returns({namespace:'a'});
-    fromFullBranchName.onCall(1).returns({namespace:'b'});
+    fromFullBranchName.onCall(0).returns({namespace: 'a'});
+    fromFullBranchName.onCall(1).returns({namespace: 'b'});
 
     return expect(rename('spaces/newBranch')).to.be.rejected.then((err) => {
       expect(git.branch.callCount).to.equal(1);
@@ -47,8 +50,8 @@ describe('Rename', () => {
   });
 
   it('should checkout the new branch and delete the old branch', () => {
-    fromFullBranchName.onCall(0).returns({namespace:'a', branch: 'c', toString: sinon.stub().returns('a/c')});
-    fromFullBranchName.onCall(1).returns({namespace:'a', branch: 'b', toString: sinon.stub().returns('a/b')});
+    fromFullBranchName.onCall(0).returns({namespace: 'a', branch: 'c', toString: sinon.stub().returns('a/c')});
+    fromFullBranchName.onCall(1).returns({namespace: 'a', branch: 'b', toString: sinon.stub().returns('a/b')});
 
     return rename('spaces/newBranch', {logger: console.log}).then(() => {
       expect(git.branch.callCount).to.equal(1);
@@ -64,8 +67,8 @@ describe('Rename', () => {
   });
 
   it('shouldn\'t log if no logger is passed', () => {
-    fromFullBranchName.onCall(0).returns({namespace:'a', branch: 'c', toString: sinon.stub().returns('a/c')});
-    fromFullBranchName.onCall(1).returns({namespace:'a', branch: 'b', toString: sinon.stub().returns('a/b')});
+    fromFullBranchName.onCall(0).returns({namespace: 'a', branch: 'c', toString: sinon.stub().returns('a/c')});
+    fromFullBranchName.onCall(1).returns({namespace: 'a', branch: 'b', toString: sinon.stub().returns('a/b')});
 
     return rename('spaces/newBranch', {}).then(() => {
       expect(git.branch.callCount).to.equal(1);
@@ -81,7 +84,7 @@ describe('Rename', () => {
 
   it('should work without passing a namespace', () => {
     fromFullBranchName.onCall(0).returns({branch: 'c', toString: sinon.stub().returns('a/c')});
-    fromFullBranchName.onCall(1).returns({namespace:'a', branch: 'b', toString: sinon.stub().returns('a/b')});
+    fromFullBranchName.onCall(1).returns({namespace: 'a', branch: 'b', toString: sinon.stub().returns('a/b')});
 
     return rename('spaces/newBranch', {logger: console.log}).then(() => {
       expect(git.branch.callCount).to.equal(1);
@@ -97,8 +100,8 @@ describe('Rename', () => {
   });
 
   it('should push to the remote when the flag is passed', () => {
-    fromFullBranchName.onCall(0).returns({namespace:'a', branch: 'c', toString: sinon.stub().returns('a/c')});
-    fromFullBranchName.onCall(1).returns({namespace:'a', branch: 'b', toString: sinon.stub().returns('a/b')});
+    fromFullBranchName.onCall(0).returns({namespace: 'a', branch: 'c', toString: sinon.stub().returns('a/c')});
+    fromFullBranchName.onCall(1).returns({namespace: 'a', branch: 'b', toString: sinon.stub().returns('a/b')});
 
     return rename('spaces/newBranch', {logger: console.log, push: true}).then(() => {
       expect(git.branch.callCount).to.equal(1);

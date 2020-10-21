@@ -4,23 +4,25 @@ const fs = require('fs');
 const _ = require('lodash');
 
 /*
- When initialized it will be `.gwfrc.json` but requiring it without the extension allows users to define it as a
+ When initialized it will be `.gbrc.json` but requiring it without the extension allows users to define it as a
  `.js` file as well.
  */
-const configFileName = '.gwfrc';
+const configFileName = '.gbrc';
 module.exports.configFileName = configFileName;
 
 /**
  * Gets global config, local config and defaults and merges them together returning a compiled config
- * @returns {Promise<any>}
+ *
+ * @returns {Promise<any>} - resolves with the combined config
  */
-module.exports.getConfig = async () => {
+module.exports.getConfig = async() => {
+
   // get global user config
   const userHomeConfig = `${os.homedir()}/${configFileName}`;
   const globalConfig = fs.existsSync(userHomeConfig) ? require(userHomeConfig) : {};
 
   // get repo config
-  const repoRoot = await git.revparse(['--show-toplevel']);
+  const repoRoot = await git.revparse([ '--show-toplevel' ]);
   const repoConfigFile = `${repoRoot}/${configFileName}`;
   const repoConfig = fs.existsSync(repoConfigFile) ? require(repoConfigFile) : {};
 
@@ -34,19 +36,21 @@ module.exports.getConfig = async () => {
 /**
  * Initializes a config for the tool by copying an example config
  *
- * @param example
- * @param options
- * @returns {Promise<void>}
+ * @param {string} example - name of the example to base the config on
+ * @param {Object} [options] - any options required
+ * @param {boolean} [options.global] - if true, the config will be placed in the current users home directory
+ * @returns {Promise<void>} - When complete
  */
 module.exports.initialize = async function(example, options = {}) {
   const exampleDir = `${__dirname}/../example-configs`;
   let path;
 
-  if(options.global) {
+  if (options.global) {
     path = `${os.homedir()}/${configFileName}.json`;
   } else {
+
     // get repo root path
-    const repoRoot = await git.revparse(['--show-toplevel']);
+    const repoRoot = await git.revparse([ '--show-toplevel' ]);
     path = `${repoRoot}/${configFileName}.json`;
   }
 
@@ -65,4 +69,4 @@ module.exports.initialize = async function(example, options = {}) {
 
   // copy the example to the desired location
   fs.copyFileSync(`${exampleDir}/${example}.json`, path);
-}
+};

@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
@@ -10,14 +11,14 @@ describe('Start', () => {
     , getConfig;
 
 
-  beforeEach(()=>{
+  beforeEach(() => {
     fromFullBranchName = sinon.stub();
 
     git = {
       checkoutBranch: sinon.stub().resolves(),
       deleteLocalBranch: sinon.stub().resolves(),
       push: sinon.stub().resolves(),
-      branch: sinon.stub().resolves({current: 'ns/cBranch'}),
+      branch: sinon.stub().resolves({current: 'ns/cBranch'})
     };
 
     getConfig = sinon.stub().resolves({alwaysPush: false, defaultRemote: 'origin'});

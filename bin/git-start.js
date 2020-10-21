@@ -4,8 +4,8 @@ const wrapper = require('./shell-wrapper');
 const start = require('../src/start');
 const Branch = require('../src/model/branch');
 
-wrapper((argv) => {
-  
+wrapper((argv) =>
+
   // extract the branch name and pass it to the script
-  return start(Branch.fromFullBranchName(argv._.join('/')), argv);
-})
+  start(Branch.fromFullBranchName(argv._.join('/')), argv)
+);
