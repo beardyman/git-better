@@ -4,6 +4,12 @@ const utils = require('./utils');
 const { getConfig } = require('./config');
 const _ = require('lodash');
 
+/**
+ * Finishes a branch by merging it into appropriate base branches and then deleting it
+ *
+ * @param {Object} options - script options for specifying remotes and/or pushing when done
+ * @returns {Promise<void>} - resolves when complete
+ */
 module.exports = async function finish(options = {}) {
   const config = await getConfig();
   const branches = await git.branch();
