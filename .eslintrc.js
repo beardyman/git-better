@@ -1,4 +1,3 @@
-/* eslint sort-keys: [ "error", "asc", { "caseSensitive": false }] */
 
 module.exports = {
   'env': {
@@ -7,12 +6,21 @@ module.exports = {
     'node': true
   },
   'extends': 'eslint:recommended',
+  'overrides': [
+    { // sort this file
+      'files': [ '.eslintrc.js' ],
+      'rules': {
+        'sort-keys-fix/sort-keys-fix': [ 'error', 'asc', { 'caseSensitive': false }]
+      }
+    }
+  ],
   'parserOptions': {
     'ecmaVersion': 2021,
     'sourceType': 'module'
   },
   'plugins': [
-    'mocha'
+    'mocha',
+    'sort-keys-fix'
   ],
   'rules': {
     'array-bracket-spacing': [ 'error', 'always', {
