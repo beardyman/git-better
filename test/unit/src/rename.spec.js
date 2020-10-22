@@ -1,15 +1,15 @@
-/* eslint-disable */
 
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
 const sinon = require('sinon');
-const proxyquire = require('proxyquire');
+const proxyquire = require('proxyquire').noCallThru();
 
 
 describe('Rename', () => {
   let rename
     , getConfig
     , git
+    , utils
     , fromFullBranchName;
 
 
@@ -23,6 +23,11 @@ describe('Rename', () => {
       branch: sinon.stub().resolves({current: 'ns/cBranch'})
     };
 
+    utils = {
+      getRemote: sinon.stub().returns('origin'),
+      shouldPush: sinon.stub().returns(false)
+    };
+
     getConfig = sinon.stub().resolves({alwaysPush: false, defaultRemote: 'origin'});
 
     sinon.stub(console, 'log');
@@ -30,7 +35,8 @@ describe('Rename', () => {
     rename = proxyquire('../../../src/rename', {
       'simple-git/promise': () => git,
       './config': {getConfig},
-      './model/branch': {fromFullBranchName}
+      './model/branch': {fromFullBranchName},
+      './utils': utils
     });
   });
 
@@ -99,11 +105,13 @@ describe('Rename', () => {
     });
   });
 
-  it('should push to the remote when the flag is passed', () => {
+  it('should push to the remote when we\'re supposed to', () => {
     fromFullBranchName.onCall(0).returns({namespace: 'a', branch: 'c', toString: sinon.stub().returns('a/c')});
     fromFullBranchName.onCall(1).returns({namespace: 'a', branch: 'b', toString: sinon.stub().returns('a/b')});
 
-    return rename('spaces/newBranch', {logger: console.log, push: true}).then(() => {
+    utils.shouldPush.returns(true);
+
+    return rename('spaces/newBranch', {logger: console.log}).then(() => {
       expect(git.branch.callCount).to.equal(1);
       expect(console.log.callCount).to.equal(1);
       expect(console.log.args[0][0]).to.equal('Renaming branch a/b to a/c');

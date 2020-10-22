@@ -1,7 +1,5 @@
 
-// for use in code
-
-// link to other code
+// expose for use in code
 module.exports = {
   finish: require('./src/finish'),
   promote: require('./src/promote'),

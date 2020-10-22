@@ -23,7 +23,7 @@ module.exports = async function update(options = {}) {
   // merge the base branch into the current branch
   await git.mergeFromTo(baseBranch, currentBranch.toString());
 
-  if (config.alwaysPush || options.push) {
+  if (utils.shouldPush(config, options)) {
     await git.push(remote, currentBranch.toString());
   }
 };

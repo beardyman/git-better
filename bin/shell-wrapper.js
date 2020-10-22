@@ -22,12 +22,11 @@ const argv = require('minimist')(process.argv.slice(2), scriptArgs);
  * Always passes cli args to the main script
  *
  * @param {Function} mainScript - bin script
+ * @returns {Promise} - promise to make tests easier
  */
-module.exports = (mainScript) => {
-  mainScript(argv).then(() => {
-    process.exit(0);
-  }).catch((err) => {
-    console.log(err.message);
-    process.exit(255);
-  });
-};
+module.exports = (mainScript) => mainScript(argv).then(() => {
+  process.exit(0);
+}).catch((err) => {
+  console.error(err.message);
+  process.exit(255);
+});

@@ -48,7 +48,7 @@ async function rename(newName, options = {}) {
   await git.checkoutBranch(newBranch.toString(), currentBranch.toString());
   await git.deleteLocalBranch(currentBranch.toString());
 
-  if (config.alwaysPush || options.push) {
+  if (utils.shouldPush(config, options)) {
     await git.push(remote, newBranch.toString());
     await git.push(remote, currentBranch.toString(), {'--delete': undefined});
   }

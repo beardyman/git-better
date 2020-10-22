@@ -22,7 +22,12 @@ describe('Utils', () => {
       branch: sinon.stub().resolves({current: 'ns/cBranch'})
     };
 
-    getConfig = sinon.stub().resolves({alwaysPush: false, defaultRemote: 'origin'});
+    getConfig = sinon.stub().resolves({
+      alwaysPush: false,
+      defaultBase: 'maiBase',
+      defaultRemote: 'origin',
+      workflows: {base: {from: 'baseConfigwf'}}
+    });
 
     sinon.stub(console, 'log');
 
@@ -34,6 +39,30 @@ describe('Utils', () => {
 
   afterEach(() => {
     console.log.restore();
+  });
+
+  describe('getRemote', () => {
+    it('should get the configured remote when none is passed as an option', () => {
+      expect(utils.getRemote({defaultRemote: 'origin'})).to.equal('origin');
+    });
+
+    it('should get the passed remote when one is passed as an option', () => {
+      expect(utils.getRemote({defaultRemote: 'origin'}, {remote: 'newRemote'})).to.equal('newRemote');
+    });
+  });
+
+  describe('shouldPush', () => {
+    it('should push when alwaysPush is configured', () => {
+      expect(utils.shouldPush({alwaysPush: true})).to.equal(true);
+    });
+
+    it('should push when the user passes the option', () => {
+      expect(utils.shouldPush({ alwaysPush: false }, {push: true})).to.equal(true);
+    });
+
+    it('should not push when its not configured to and the user doesn\'t pass the option', () => {
+      expect(utils.shouldPush({ alwaysPush: false })).to.equal(false);
+    });
   });
 
   describe('isClean', () => {
@@ -66,5 +95,42 @@ describe('Utils', () => {
       expect(git.pull.args[0][1]).to.equal('base');
       expect(git.checkout.args[1][0]).to.equal('current');
     });
+  });
+
+  describe('getWorkflow', () => {
+    it('should return a specific workflow from the config', async() => {
+      expect(await utils.getWorkflow({namespace: 'test'}, {workflows: {test: 'testwf'}})).to.equal('testwf');
+    });
+
+    it('should return get the config and then return a specific workflow if the config is not passed', async() => {
+      expect(await utils.getWorkflow({namespace: 'base'})).to.deep.equal({ from: 'baseConfigwf'});
+    });
+
+    it('should return nothing if the workflow cannot be found', async() => {
+      expect(await utils.getWorkflow({namespace: 'blah'})).to.equal(undefined);
+    });
+  });
+
+  describe('getBaseBranch', () => {
+    it('should the default base branch when there isn\'t a workflow configured', async() => {
+      expect(await utils.getBaseBranch({namespace: 'test'})).to.equal('maiBase');
+    });
+
+    it('it should return the base branch from the config when configured', async() => {
+      expect(await utils.getBaseBranch({namespace: 'base'})).to.equal('baseConfigwf');
+    });
+  });
+
+  describe('getAllBaseBranches', () => {
+    it('should be return all base branches from promotion paths', async() => {
+      expect(utils.getAllBaseBranches({promotionPaths: {'develop': 'master', 'thing': 'otherthing'}}))
+        .to.deep.equal([ 'develop', 'thing', 'master', 'otherthing' ]);
+    });
+
+    it('should be return nothing if there are no promotion paths', async() => {
+      expect(utils.getAllBaseBranches({}))
+        .to.deep.equal([ ]);
+    });
+
   });
 });

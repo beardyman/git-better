@@ -15,6 +15,15 @@ const utils = {};
 utils.getRemote = (config, options = {}) => options.remote || config.defaultRemote;
 
 /**
+ * Deterimines if we should push or not
+ *
+ * @param {Object} config - the config for this module
+ * @param {Object} options - user options passed in.
+ * @returns {boolean} - true if we should push
+ */
+utils.shouldPush = (config, options = {}) => !!(config.alwaysPush || options.push);
+
+/**
  * Determines if the current working directory is clean or not
  *
  * @returns {Promise<boolean>} - resolves true if there are no changes from the last commit in the current branch

@@ -27,13 +27,14 @@ module.exports = async function promote(options = {}) {
   const remote = utils.getRemote(config, options);
 
   // validation
-  if (!_.includes(_.keys(config.promotionPaths), currentBranch)) {
+  if (!_.includes(_.keys(config.promotionPaths), currentBranch.toString())) {
     throw new Error(`Current branch is not promotable. See promotionPaths in ${configFileName}.`);
   }
 
   const promotionBranch = config.promotionPaths[currentBranch];
 
-  // todo: pull current branch as well just in case there are other remote changes
+  // pull current branch just in case there are other remote changes
+  git.pull(remote, currentBranch.toString());
 
   // update the promotion branch
   await utils.switchToAndUpdateBase(remote, promotionBranch);
@@ -42,7 +43,7 @@ module.exports = async function promote(options = {}) {
   await git.mergeFromTo(currentBranch.toString(), promotionBranch);
 
   // push if we need to
-  if (config.alwaysPush || options.push) {
+  if (utils.shouldPush(config, options)) {
     await git.push(remote, promotionBranch);
     await git.push(remote, currentBranch.toString());
   }
