@@ -1,9 +1,16 @@
-.TH GIT-START 1
+.TH GIT-RENAME 1
 .SH NAME
-git start \- Create a new branch based off of a specific base branch
+git rename \- Renames a branch to something new
 .SH SYNOPSIS
-.B git start
-.IR [workflow] branchName
+.B git rename
+.IR [--remote|--push]\ newBranchName
 .SH DESCRIPTION
-.B git start
-Create a new branch based off of a specific base branch based on workflows.
+.B
+Creates a new branch with a new name from the current branch and deletes the old one.
+.SH OPTIONS
+.TP
+.BR \-p ", " \-\-push
+Pushes to the remote when complete. Can be configured to always push in `.gbrc` config file
+.TP
+.BR \-R ", " \-\-remote
+Specifies the remote to push to.  Only valid when pushing.

@@ -1,9 +1,16 @@
-.TH GIT-START 1
+.TH GIT-PROMOTE 1
 .SH NAME
-git start \- Create a new branch based off of a specific base branch
+git promote \- Merges one base branch into another
 .SH SYNOPSIS
-.B git start
-.IR [workflow] branchName
+.B git promote
+.IR [--remote|--push]
 .SH DESCRIPTION
-.B git start
-Create a new branch based off of a specific base branch based on workflows.
+.B
+Merges one base branch into another.
+.SH OPTIONS
+.TP
+.BR \-p ", " \-\-push
+Pushes to the remote when complete. Can be configured to always push in `.gbrc` config file
+.TP
+.BR \-R ", " \-\-remote
+Specifies the remote to pull from and push to.

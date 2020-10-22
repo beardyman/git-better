@@ -8,10 +8,15 @@
     "git-rename": "./bin/git-rename.js",
     "git-start": "./bin/git-start.js",
     "git-update": "./bin/git-update.js",
-    "git-wf-init": "./bin/git-config.js"
+    "git-better-init": "./bin/git-config.js"
   },
   "man": [
-    "./man/git-start.1"
+    "./man/git-better-init.1",
+    "./man/git-finish.1",
+    "./man/git-promote.1",
+    "./man/git-rename.1",
+    "./man/git-start.1",
+    "./man/git-update.1"
   ],
   "scripts": {
     "lint": "eslint . --fix",

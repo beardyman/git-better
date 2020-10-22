@@ -1,9 +1,16 @@
-.TH GIT-START 1
+.TH GIT-FINISH 1
 .SH NAME
-git start \- Create a new branch based off of a specific base branch
+git finish \- Finishes a branch by merging it into its base(es) and deleting it
 .SH SYNOPSIS
-.B git start
-.IR [workflow] branchName
+.B git finish
+.IR [--remote|--push]
 .SH DESCRIPTION
-.B git start
-Create a new branch based off of a specific base branch based on workflows.
+.B
+Finishes a branch by merging it into its base(es) and deleting it
+.SH OPTIONS
+.TP
+.BR \-p ", " \-\-push
+Pushes to the remote when complete. Can be configured to always push in `.gbrc` config file
+.TP
+.BR \-R ", " \-\-remote
+Specifies the remote to push to.  Only valid when pushing.
