@@ -1,3 +1,4 @@
 node_modules
 test/reports
 .nyc_output
+.idea
