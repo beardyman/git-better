@@ -120,5 +120,4 @@ describe('Rename', () => {
       expect(git.push.args[1][2]).to.deep.equal({'--delete': undefined});
     });
   });
-
 });
