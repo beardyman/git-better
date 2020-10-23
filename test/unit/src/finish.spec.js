@@ -32,7 +32,7 @@ describe('Finish', () => {
       switchToAndUpdateBase: sinon.stub().resolves()
     };
 
-    getConfig = sinon.stub().resolves({alwaysPush: false, defaultRemote: 'origin'});
+    getConfig = sinon.stub().resolves({alwaysPush: false, defaultBase: 'dBranch', defaultRemote: 'origin'});
 
     sinon.stub(console, 'log');
 
@@ -75,6 +75,30 @@ describe('Finish', () => {
     // make sure we didn't push anything
     expect(git.push.callCount).to.equal(0);
   }));
+
+  it('should finish the branch even if a workflow cannot be found', () => {
+    utils.getWorkflow.resolves(undefined);
+    return finish().then(() => {
+
+      // check that we're updating the base
+      expect(utils.switchToAndUpdateBase.callCount).to.equal(2);
+      expect(utils.switchToAndUpdateBase.args[0][0]).to.equal('origin');
+      expect(utils.switchToAndUpdateBase.args[0][1]).to.equal('main');
+      expect(utils.switchToAndUpdateBase.args[0][2]).to.equal('ns/cBranch');
+
+      // check that we're merging all of the to's
+      expect(utils.switchToAndUpdateBase.args[1][0]).to.equal('origin');
+      expect(utils.switchToAndUpdateBase.args[1][1]).to.equal('dBranch');
+      expect(utils.switchToAndUpdateBase.args[1][2]).to.equal(undefined);
+
+      // check deletion of local branch
+      expect(git.deleteLocalBranch.callCount).to.equal(1);
+      expect(git.deleteLocalBranch.args[0][0]).to.equal('ns/cBranch');
+
+      // make sure we didn't push anything
+      expect(git.push.callCount).to.equal(0);
+    });
+  });
 
   it('should finish the branch for multiple branches', () => {
     utils.getWorkflow.resolves({to: [ 'main', 'develop' ]});
