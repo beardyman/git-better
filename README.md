@@ -2,6 +2,7 @@
 A Tool suite of git extensions for day to day use.
 
 ## Installation
+Works with node 10 or newer.
 ```sh 
 npm i @beardyman/git-better
 ```
