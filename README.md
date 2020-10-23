@@ -1,6 +1,9 @@
 # git-better
 A Tool suite of git extensions for day to day use.
 
+![Unit Tests](https://github.com/beardyman/git-better/workflows/Unit%20Tests/badge.svg)
+
+
 ## Installation
 Works with node 10 or newer.
 ```sh 
