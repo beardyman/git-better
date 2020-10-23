@@ -45,8 +45,7 @@ async function rename(newName, options = {}) {
     options.logger(`Renaming branch ${currentBranch} to ${newBranch}`);
   }
 
-  await git.checkoutBranch(newBranch.toString(), currentBranch.toString());
-  await git.deleteLocalBranch(currentBranch.toString());
+  await git.raw([ 'branch', '-m', newBranch.toString() ]);
 
   if (utils.shouldPush(config, options)) {
     await git.push(remote, newBranch.toString());

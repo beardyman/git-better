@@ -18,7 +18,7 @@ describe('Rename', () => {
 
     git = {
       checkoutBranch: sinon.stub().resolves(),
-      deleteLocalBranch: sinon.stub().resolves(),
+      raw: sinon.stub().resolves(),
       push: sinon.stub().resolves(),
       branch: sinon.stub().resolves({current: 'ns/cBranch'})
     };
@@ -55,7 +55,7 @@ describe('Rename', () => {
     });
   });
 
-  it('should checkout the new branch and delete the old branch', () => {
+  it('should rename the branch', () => {
     fromFullBranchName.onCall(0).returns({namespace: 'a', branch: 'c', toString: sinon.stub().returns('a/c')});
     fromFullBranchName.onCall(1).returns({namespace: 'a', branch: 'b', toString: sinon.stub().returns('a/b')});
 
@@ -63,11 +63,8 @@ describe('Rename', () => {
       expect(git.branch.callCount).to.equal(1);
       expect(console.log.callCount).to.equal(1);
       expect(console.log.args[0][0]).to.equal('Renaming branch a/b to a/c');
-      expect(git.checkoutBranch.callCount).to.equal(1);
-      expect(git.checkoutBranch.args[0][0]).to.equal('a/c');
-      expect(git.checkoutBranch.args[0][1]).to.equal('a/b');
-      expect(git.deleteLocalBranch.callCount).to.equal(1);
-      expect(git.deleteLocalBranch.args[0][0]).to.equal('a/b');
+      expect(git.raw.callCount).to.equal(1);
+      expect(git.raw.args[0][0]).to.deep.equal([ 'branch', '-m', 'a/c' ]);
       expect(git.push.callCount).to.equal(0);
     });
   });
@@ -79,11 +76,8 @@ describe('Rename', () => {
     return rename('spaces/newBranch', {}).then(() => {
       expect(git.branch.callCount).to.equal(1);
       expect(console.log.callCount).to.equal(0);
-      expect(git.checkoutBranch.callCount).to.equal(1);
-      expect(git.checkoutBranch.args[0][0]).to.equal('a/c');
-      expect(git.checkoutBranch.args[0][1]).to.equal('a/b');
-      expect(git.deleteLocalBranch.callCount).to.equal(1);
-      expect(git.deleteLocalBranch.args[0][0]).to.equal('a/b');
+      expect(git.raw.callCount).to.equal(1);
+      expect(git.raw.args[0][0]).to.deep.equal([ 'branch', '-m', 'a/c' ]);
       expect(git.push.callCount).to.equal(0);
     });
   });
@@ -96,11 +90,8 @@ describe('Rename', () => {
       expect(git.branch.callCount).to.equal(1);
       expect(console.log.callCount).to.equal(1);
       expect(console.log.args[0][0]).to.equal('Renaming branch a/b to a/c');
-      expect(git.checkoutBranch.callCount).to.equal(1);
-      expect(git.checkoutBranch.args[0][0]).to.equal('a/c');
-      expect(git.checkoutBranch.args[0][1]).to.equal('a/b');
-      expect(git.deleteLocalBranch.callCount).to.equal(1);
-      expect(git.deleteLocalBranch.args[0][0]).to.equal('a/b');
+      expect(git.raw.callCount).to.equal(1);
+      expect(git.raw.args[0][0]).to.deep.equal([ 'branch', '-m', 'a/c' ]);
       expect(git.push.callCount).to.equal(0);
     });
   });
@@ -115,11 +106,8 @@ describe('Rename', () => {
       expect(git.branch.callCount).to.equal(1);
       expect(console.log.callCount).to.equal(1);
       expect(console.log.args[0][0]).to.equal('Renaming branch a/b to a/c');
-      expect(git.checkoutBranch.callCount).to.equal(1);
-      expect(git.checkoutBranch.args[0][0]).to.equal('a/c');
-      expect(git.checkoutBranch.args[0][1]).to.equal('a/b');
-      expect(git.deleteLocalBranch.callCount).to.equal(1);
-      expect(git.deleteLocalBranch.args[0][0]).to.equal('a/b');
+      expect(git.raw.callCount).to.equal(1);
+      expect(git.raw.args[0][0]).to.deep.equal([ 'branch', '-m', 'a/c' ]);
       expect(git.push.callCount).to.equal(2);
 
       // push the new branch
