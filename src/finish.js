@@ -31,7 +31,9 @@ module.exports = async function finish(options = {}) {
 
   // merge the working branch into each of the base branches
   const workflow = await utils.getWorkflow(currentBranch);
-  const tos = _.flatten([ workflow.to ]); // ensure that tos is always an array for easier logic below
+
+  // ensure that tos is always an array for easier logic below
+  const tos = workflow ? _.flatten([ workflow.to ]) : [ config.defaultBase ];
 
   await Promise.all(_.map(tos, async(toBase) => {
 
