@@ -23,7 +23,7 @@ module.exports = async function update(options = {}) {
   }
 
   // make sure the base branch is up to date
-  await utils.switchToAndUpdateBase(remote, baseBranch, currentBranch);
+  await utils.switchToAndUpdateBase(remote, baseBranch.toString(), currentBranch.toString());
 
 
   // merge the base branch into the current branch
