@@ -6,38 +6,61 @@ A Tool suite of git extensions for day to day use.
 
 ## Installation
 Works with node 10 or newer.
-```sh 
+```shell script 
 npm i @beardyman/git-better
 ```
 
 ## Usage
 Create a config, base it off of one of the examples in `example-configs`.
-```sh
+```shell script
 git better-init hotfix
 ```
 
+Open the repository UI
+```shell script
+cd my-git-repo
+git open
+```
+
 Start a new branch
-```sh
+```shell script
 git start feature myBranch
 ```
 
-Update your branch
-```sh
+Open the repository UI to the current branch
+```shell script
+git open -b|--branch
+```
+
+Update your branch from its base branch
+```shell script
 git update
 ```
 
 Rename a branch
-```sh
+```shell script
 git rename newBranchName
 ```
 
 Finish your branch
-```sh
+```shell script
 git finish
 ```
 
+Finish and push your branch
+```shell script
+git finish -p|--push
+```
+
 Promote one trunk branch to another
-```sh
+```shell script
 # From the develop branch
 git promote
+```
+
+## Documentation
+Each command has its own man page where all of the options are documented.
+They can be be opened like so:
+```shell script
+man git-finish
 ```
