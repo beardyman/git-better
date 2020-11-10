@@ -7,7 +7,7 @@ A Tool suite of git extensions for day to day use.
 ## Installation
 Works with node 10 or newer.
 ```shell script 
-npm i @beardyman/git-better
+npm i -g @beardyman/git-better
 ```
 
 ## Usage
