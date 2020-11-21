@@ -42,7 +42,7 @@ module.exports.getConfig = async() => {
  * @returns {Promise<void>} - When complete
  */
 module.exports.initialize = async function(example, options = {}) {
-  const exampleDir = `${__dirname}/../example-configs`;
+  const exampleDir = `${__dirname}/../../example-configs`;
   let path;
 
   if (options.global) {
