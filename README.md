@@ -13,6 +13,7 @@ git finish
 git rename
 git promote
 git open
+git pr
 ```
 
 ## Installation
@@ -102,6 +103,11 @@ Open the repository UI
 ```shell script
 cd my-git-repo
 git open
+```
+
+Open a pull request for your current branch
+```shell
+git pr
 ```
 
 Start a new branch
