@@ -5,11 +5,12 @@ require('update-notifier')({pkg}).notify();
 
 const scriptArgs = {
   string: [ 'remote' ],
-  boolean: [ 'global', 'push', 'merge', 'rebase' ],
+  boolean: [ 'branch', 'global', 'merge', 'push', 'rebase' ],
   alias: {
+    branch: 'b',
     global: 'g',
-    push: 'p',
     merge: 'm',
+    push: 'p',
     rebase: 'r',
     remote: 'R'
   }
