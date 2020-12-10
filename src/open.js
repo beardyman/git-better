@@ -1,7 +1,7 @@
 const open = require('open');
 const _ = require('lodash');
 const git = require('simple-git/promise')();
-
+const utils = require('./utils');
 
 /**
  * Attempts to get the remote URL of the origin
@@ -9,14 +9,7 @@ const git = require('simple-git/promise')();
  * @returns {Promise<*>} - returns the url to open
  */
 async function getURL(branchFlag = false) {
-  const remotes = await git.getRemotes(true);
-  let remoteUrl = _.get(_.find(remotes, {name: 'origin'}), 'refs.fetch');
-
-  // handle ssh clones
-  if (_.startsWith(remoteUrl, 'git@')) {
-    remoteUrl = _.replace(remoteUrl, ':', '/'); // replaces `:` before username
-    remoteUrl = _.replace(remoteUrl, 'git@', 'https://');
-  }
+  let remoteUrl = await utils.getUiUrl();
 
   if (branchFlag) {
     const currentBranch = await git.branch();

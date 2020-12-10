@@ -31,6 +31,7 @@
     "git-finish": "./bin/git-finish.js",
     "git-rename": "./bin/git-rename.js",
     "git-open": "./bin/git-open.js",
+    "git-pr": "./bin/git-pr.js",
     "git-start": "./bin/git-start.js",
     "git-update": "./bin/git-update.js",
     "git-better-init": "./bin/git-config.js"
@@ -41,6 +42,7 @@
     "./man/git-promote.1",
     "./man/git-rename.1",
     "./man/git-open.1",
+    "./man/git-pr.1",
     "./man/git-start.1",
     "./man/git-update.1"
   ],
