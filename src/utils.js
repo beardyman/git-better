@@ -14,6 +14,10 @@ const utils = {};
  */
 utils.getRemote = (config, options = {}) => options.remote || config.defaultRemote;
 
+/**
+ * Gets the Ui's base URL
+ * @returns {Promise<*>} the base url
+ */
 utils.getUiUrl = async() => {
   const remotes = await git.getRemotes(true);
   let remoteUrl = _.get(_.find(remotes, {name: 'origin'}), 'refs.fetch');

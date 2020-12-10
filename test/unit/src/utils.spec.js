@@ -19,7 +19,8 @@ describe('Utils', () => {
       deleteLocalBranch: sinon.stub().resolves(),
       pull: sinon.stub().resolves(),
       push: sinon.stub().resolves(),
-      branch: sinon.stub().resolves({current: 'ns/cBranch'})
+      branch: sinon.stub().resolves({current: 'ns/cBranch'}),
+      getRemotes: sinon.stub().resolves([{ name: 'origin', refs: {fetch: 'datRemote'}}])
     };
 
     getConfig = sinon.stub().resolves({
@@ -132,5 +133,19 @@ describe('Utils', () => {
         .to.deep.equal([ ]);
     });
 
+  });
+
+  describe('getUiUrl', () => {
+    it('should return the remote', () => utils.getUiUrl().then((result) => {
+      expect(result).to.equal('datRemote');
+    }));
+
+    it('should handle ssh cloned urls', () => {
+      git.getRemotes.resolves([{ name: 'origin', refs: {fetch: 'git@datUrl.com:withUser'}}]);
+
+      return utils.getUiUrl().then((results) => {
+        expect(results).to.equal('https://datUrl.com/withUser');
+      });
+    });
   });
 });
