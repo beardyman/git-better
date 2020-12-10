@@ -14,7 +14,7 @@ const { getConfig } = require('./config');
  * @returns {string} - the compare (pr) url to open
  */
 function makePrUrl(baseUrl, baseBranch, currentBranch) {
-  return `${baseUrl}/compare/${baseBranch}...${currentBranch}`;
+  return `${_.replace(baseUrl, '.git', '')}/compare/${baseBranch}...${currentBranch}?expand=1`;
 }
 
 /**
@@ -28,6 +28,10 @@ async function main(options = {}) {
     const config = await getConfig();
     const branches = await git.branch();
     const currentBranch = Branch.fromFullBranchName(branches.current);
+    const remote = utils.getRemote(config, options);
+
+    // attempt to push any local changes to the current branch
+    await git.push(remote, currentBranch.toString());
 
     // get the workflow so we can find the tos
     const workflow = await utils.getWorkflow(currentBranch);
