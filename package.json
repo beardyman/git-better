@@ -45,7 +45,7 @@
     "lint": "eslint . --fix",
     "test:base": "mocha --recursive test/unit/",
     "test:cov": "nyc -r lcov -r text-summary  --report-dir test/reports/unit/ npm run test:base",
-    "test": "npm run test:dev",
+    "test": "npm run test:ci",
     "test:ci": "npm run test:cov",
     "test:dev": "npm run test:cov -- -- --watch"
   },
