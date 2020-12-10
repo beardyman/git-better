@@ -17,6 +17,8 @@ git open
 
 ## Installation
 Works with node 10 or newer.
+
+Also requires `git` to be installed.
 ```shell script 
 npm i -g @beardyman/git-better
 ```

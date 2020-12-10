@@ -6,6 +6,9 @@
   "author": "@beardyman",
   "license": "ISC",
   "description": "CLI Tool-suite for common git workflow operations including workflows",
+  "engines": {
+    "node": ">=10"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/beardyman/git-better"
