@@ -1,14 +1,14 @@
 {
   "name": "@beardyman/git-better",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "public": true,
   "main": "index.js",
   "author": "@beardyman",
   "license": "ISC",
   "description": "CLI Tool-suite for common git workflow operations including workflows",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/beardyman/git-better"
+    "type": "git",
+    "url": "https://github.com/beardyman/git-better"
   },
   "keywords": [
     "git",
