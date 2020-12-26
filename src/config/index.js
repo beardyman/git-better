@@ -2,6 +2,7 @@ const git = require('simple-git/promise')();
 const os = require('os');
 const fs = require('fs');
 const _ = require('lodash');
+let config;
 
 /*
  When initialized it will be `.gbrc.json` but requiring it without the extension allows users to define it as a
@@ -17,20 +18,33 @@ module.exports.configFileName = configFileName;
  */
 module.exports.getConfig = async() => {
 
-  // get global user config
-  const userHomeConfig = `${os.homedir()}/${configFileName}`;
-  const globalConfig = fs.existsSync(userHomeConfig) ? require(userHomeConfig) : {};
+  if (!config) {
+    const userHomeConfig = `${os.homedir()}/${configFileName}`;
+    const repoRoot = await git.revparse([ '--show-toplevel' ]);
+    const repoConfigFile = `${repoRoot}/${configFileName}`;
 
-  // get repo config
-  const repoRoot = await git.revparse([ '--show-toplevel' ]);
-  const repoConfigFile = `${repoRoot}/${configFileName}`;
-  const repoConfig = fs.existsSync(repoConfigFile) ? require(repoConfigFile) : {};
+    // get global user config
+    let globalConfig = _.attempt(require, userHomeConfig)
 
-  // get default config
-  const defaultConfig = require('./default.json');
+      // get repo config
+      ,repoConfig = _.attempt(require, repoConfigFile);
 
-  // merge them
-  return _.merge(defaultConfig, globalConfig, repoConfig);
+    // default configs if they can't be found
+    if (globalConfig instanceof Error) {
+      globalConfig = {};
+    }
+    if (repoConfig instanceof Error) {
+      repoConfig = {};
+    }
+
+    // get default config
+    const defaultConfig = require('./default.json');
+
+    // merge them
+    config = _.merge(defaultConfig, globalConfig, repoConfig);
+  }
+
+  return config;
 };
 
 /**

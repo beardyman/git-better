@@ -7,5 +7,5 @@ const Branch = require('../src/model/branch');
 wrapper((argv) =>
 
   // extract the branch name and pass it to the script
-  start(Branch.fromFullBranchName(argv._.join('/')), argv)
+  start(Branch.fromFullBranchName(argv._.join('/')), {logger: console.log, ...argv})
 );

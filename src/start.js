@@ -19,6 +19,10 @@ module.exports = async function start(branch, options = {}) {
   const config = await getConfig();
   const baseBranch = await utils.getBaseBranch(branch);
   const remote = utils.getRemote(config, options);
+  const {logger} = options;
+
+  logger(config);
+  logger(`Starting new branch ${branch.toString()} from ${baseBranch}`);
 
   // pull the base branch and update it
   await utils.switchToAndUpdateBase(remote, baseBranch);

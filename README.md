@@ -29,7 +29,8 @@ npm i -g @beardyman/git-better
 advanced features, you're going to want to create a configuration.  
 
 Configurations will be read from two different spots and if they both exist, merged together favoring values in the 
-config closest to the code.
+config closest to the code. A config file can be created in a given repo, or a global config can be created in the user
+home directory.
 
 You can create a config by hand, however there is a built-in helper to initialize a config from one of the examples in 
 this repository under /example-configs.
