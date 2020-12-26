@@ -51,42 +51,54 @@ describe('Config', () => {
   });
 
   describe('getConfig', () => {
-    it('should get the default config if no other configs exist', () => config.getConfig().then((config) => {
-      expect(os.homedir.callCount).to.equal(1);
-      expect(git.revparse.callCount).to.equal(1);
-      expect(fs.existsSync.callCount).to.equal(2);
-      expect(config).to.deep.equal({this: 'is the default config'});
-    }));
-
-    it('should combine the user config with the default', () => {
-      fs.existsSync.onFirstCall().returns(true);
+    it('should get the default config if no other configs exist', () => {
+      userConfig = new Error();
+      repoConfig = new Error();
+      config = initializeConfig();
       return config.getConfig().then((config) => {
         expect(os.homedir.callCount).to.equal(1);
         expect(git.revparse.callCount).to.equal(1);
-        expect(fs.existsSync.callCount).to.equal(2);
+        expect(config).to.deep.equal({this: 'is the default config'});
+      });
+    });
+
+    it('should combine the user config with the default', () => {
+      repoConfig = new Error();
+      config = initializeConfig();
+      return config.getConfig().then((config) => {
+        expect(os.homedir.callCount).to.equal(1);
+        expect(git.revparse.callCount).to.equal(1);
         expect(config).to.deep.equal({home: 'config', this: 'is the default config'});
       });
     });
 
     it('should combine the repo config with the default', () => {
-      fs.existsSync.onSecondCall().returns(true);
+      userConfig = new Error();
+      config = initializeConfig();
       return config.getConfig().then((config) => {
         expect(os.homedir.callCount).to.equal(1);
         expect(git.revparse.callCount).to.equal(1);
-        expect(fs.existsSync.callCount).to.equal(2);
         expect(config).to.deep.equal({repo: 'config', this: 'is the default config'});
       });
     });
 
-    it('should combine the home config with the default and the repo config', () => {
-      fs.existsSync.returns(true);
-      return config.getConfig().then((config) => {
+    it('should combine the home config with the default and the repo config', () => config.getConfig()
+      .then((config) => {
         expect(os.homedir.callCount).to.equal(1);
         expect(git.revparse.callCount).to.equal(1);
-        expect(fs.existsSync.callCount).to.equal(2);
         expect(config).to.deep.equal({home: 'config', repo: 'config', this: 'is the default config'});
-      });
-    });
+      }));
+
+    it('should return the same config each time', () => config.getConfig()
+      .then((conf1) => {
+        expect(conf1).to.deep.equal({home: 'config', repo: 'config', this: 'is the default config'});
+        return config.getConfig().then((conf2) => {
+          expect(os.homedir.callCount).to.equal(1);
+          expect(git.revparse.callCount).to.equal(1);
+          expect(conf1).to.deep.equal(conf2);
+        });
+      })
+    );
 
     it('the repo config should overwrite the user config and the user config should overwrite the default', () => {
       userConfig = {config: 'home', this: 'is the user config'};
@@ -99,7 +111,6 @@ describe('Config', () => {
       return config.getConfig().then((config) => {
         expect(os.homedir.callCount).to.equal(1);
         expect(git.revparse.callCount).to.equal(1);
-        expect(fs.existsSync.callCount).to.equal(2);
         expect(config).to.deep.equal({some: 'other setting', config: 'repo', this: 'is the user config'});
       });
     });
