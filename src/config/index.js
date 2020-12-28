@@ -73,8 +73,6 @@ module.exports.initialize = async function(example = false, options = {}) {
     throw new Error('Config file already exists. Please remove it if you\'d like to initialize a new config.');
   }
 
-
-
   // no example provided
   if (!example) {
 

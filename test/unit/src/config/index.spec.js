@@ -40,6 +40,7 @@ describe('Config', () => {
     };
 
     fs = {
+      writeFileSync: sinon.stub(),
       existsSync: sinon.stub().returns(false),
       readdirSync: sinon.stub().returns([ 'ex1', 'ex2' ]),
       copyFileSync: sinon.stub()
@@ -141,6 +142,13 @@ describe('Config', () => {
       expect(fs.existsSync.callCount).to.equal(1);
       expect(fs.copyFileSync.callCount).to.equal(1);
       expect(fs.copyFileSync.args[0][1]).to.match(/homedir.*/);
+    }));
+
+    it('should just make a blank config if there is no example', () => config.initialize().then(() => {
+      expect(fs.existsSync.callCount).to.equal(1);
+      expect(fs.writeFileSync.callCount).to.equal(1);
+      expect(fs.writeFileSync.args[0][0]).to.match(/repoPath.*/);
+      expect(fs.writeFileSync.args[0][1]).to.equal('{\n\n}');
     }));
   });
 });
