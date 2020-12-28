@@ -50,12 +50,12 @@ module.exports.getConfig = async() => {
 /**
  * Initializes a config for the tool by copying an example config
  *
- * @param {string} example - name of the example to base the config on
+ * @param {string} [example] - name of the example to base the config on
  * @param {Object} [options] - any options required
  * @param {boolean} [options.global] - if true, the config will be placed in the current users home directory
  * @returns {Promise<void>} - When complete
  */
-module.exports.initialize = async function(example, options = {}) {
+module.exports.initialize = async function(example = false, options = {}) {
   const exampleDir = `${__dirname}/../../example-configs`;
   let path;
 
@@ -73,14 +73,29 @@ module.exports.initialize = async function(example, options = {}) {
     throw new Error('Config file already exists. Please remove it if you\'d like to initialize a new config.');
   }
 
-  // check to see if theres an example for the example name the user passed
-  const examples = fs.readdirSync(exampleDir)
-    .map((filename) => _.replace(filename, '.json', ''));
 
-  if (!examples.includes(example)) {
-    throw new Error(`An example by that name does not exist. Possible examples are: ${examples.join(', ')}`);
+
+  // no example provided
+  if (!example) {
+
+    // lets just make a blank config file
+    fs.writeFileSync(path, '{\n\n}');
+
+    // if we want to use an example
+  } else {
+
+    // check to see if theres an example for the example name the user passed
+    const examples = fs.readdirSync(exampleDir)
+      .map((filename) => _.replace(filename, '.json', ''));
+
+    if (examples.includes(example)) {
+
+      // copy the example to the desired location
+      fs.copyFileSync(`${exampleDir}/${example}.json`, path);
+    } else {
+      throw new Error(`An example by that name does not exist. Possible examples are: ${examples.join(', ')}`);
+    }
   }
 
-  // copy the example to the desired location
-  fs.copyFileSync(`${exampleDir}/${example}.json`, path);
+
 };
