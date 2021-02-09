@@ -1,6 +1,6 @@
 {
   "name": "@beardyman/git-better",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "public": true,
   "main": "index.js",
   "author": "@beardyman",
@@ -28,14 +28,14 @@
     "cli"
   ],
   "bin": {
-    "git-finish": "./bin/git-finish.js",
-    "git-rename": "./bin/git-rename.js",
-    "git-open": "./bin/git-open.js",
-    "git-pr": "./bin/git-pr.js",
-    "git-promote": "./bin/git-promote.js",
-    "git-start": "./bin/git-start.js",
-    "git-update": "./bin/git-update.js",
-    "git-better-init": "./bin/git-config.js"
+    "git-finish": "bin/git-finish.js",
+    "git-rename": "bin/git-rename.js",
+    "git-open": "bin/git-open.js",
+    "git-pr": "bin/git-pr.js",
+    "git-promote": "bin/git-promote.js",
+    "git-start": "bin/git-start.js",
+    "git-update": "bin/git-update.js",
+    "git-better-init": "bin/git-config.js"
   },
   "man": [
     "./man/git-better-init.1",
