@@ -32,6 +32,7 @@
     "git-rename": "./bin/git-rename.js",
     "git-open": "./bin/git-open.js",
     "git-pr": "./bin/git-pr.js",
+    "git-promote": "./bin/git-promote.js",
     "git-start": "./bin/git-start.js",
     "git-update": "./bin/git-update.js",
     "git-better-init": "./bin/git-config.js"
