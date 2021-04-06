@@ -30,8 +30,11 @@ async function main(options = {}) {
     const currentBranch = Branch.fromFullBranchName(branches.current);
     const remote = utils.getRemote(config, options);
 
-    // attempt to push any local changes to the current branch
-    await git.push(remote, currentBranch.toString());
+    if (utils.shouldPush(config, options)) {
+
+      // attempt to push any local changes to the current branch
+      await git.push(remote, currentBranch.toString());
+    }
 
     // get the workflow so we can find the tos
     const workflow = await utils.getWorkflow(currentBranch);
