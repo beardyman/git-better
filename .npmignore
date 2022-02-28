@@ -4,3 +4,6 @@
 .nyc_output
 .github
 test
+.git
+node_modules
+.husky
