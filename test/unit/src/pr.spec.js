@@ -22,6 +22,7 @@ describe('Git Pr', () => {
     };
 
     utils = {
+      shouldPush: sinon.stub().returns(false),
       getUiUrl: sinon.stub().resolves('Sweet URL'),
       getWorkflow: sinon.stub().resolves()
     };
@@ -56,6 +57,15 @@ describe('Git Pr', () => {
     expect(console.log.args[0][0]).to.equal('Opening Sweet URL/compare/ace...ns/cBranch?expand=1...');
     expect(open.args[0][0]).to.equal('Sweet URL/compare/ace...ns/cBranch?expand=1');
   }));
+
+  it('should push local changes before opening the pr if needed', () => {
+    utils.shouldPush.returns(true);
+    return main({logger: console.log}).then(() => {
+      expect(console.log.args[0][0]).to.equal('Opening Sweet URL/compare/ace...ns/cBranch?expand=1...');
+      expect(git.push.callCount).to.equal(1);
+      expect(open.args[0][0]).to.equal('Sweet URL/compare/ace...ns/cBranch?expand=1');
+    });
+  });
 
   it('should open all URLs if there are multiple tos in the workflow', () => {
     utils.getWorkflow.resolves({to: [ 'ace', 'of', 'base' ]});
