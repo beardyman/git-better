@@ -53,7 +53,8 @@
     "test:cov": "nyc -r lcov -r text-summary  --report-dir test/reports/unit/ npm run test:base",
     "test": "npm run test:ci",
     "test:ci": "npm run test:cov",
-    "test:dev": "npm run test:cov -- -- --watch"
+    "test:dev": "npm run test:cov -- -- --watch",
+    "prepare": "husky install"
   },
   "dependencies": {
     "lodash": "^4.17.20",
@@ -68,7 +69,7 @@
     "eslint": "^7.16.0",
     "eslint-plugin-mocha": "^8.0.0",
     "eslint-plugin-sort-keys-fix": "^1.1.1",
-    "husky": "^4.3.6",
+    "husky": "^7.0.0",
     "lint-staged": "^10.5.3",
     "mocha": "^9.2.1",
     "nyc": "^15.1.0",
@@ -77,10 +78,5 @@
   },
   "lint-staged": {
     "**/*.js": "npm run lint --"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   }
 }
