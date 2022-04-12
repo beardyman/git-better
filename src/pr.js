@@ -1,4 +1,4 @@
-const git = require('simple-git/promise')();
+const git = require('simple-git')();
 const open = require('open');
 const _ = require('lodash');
 const utils = require('./utils');

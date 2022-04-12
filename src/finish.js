@@ -1,4 +1,4 @@
-const git = require('simple-git/promise')();
+const git = require('simple-git')();
 const Branch = require('./model/branch');
 const utils = require('./utils');
 const { getConfig } = require('./config');

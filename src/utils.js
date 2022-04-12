@@ -1,5 +1,5 @@
 
-const git = require('simple-git/promise')();
+const git = require('simple-git')();
 const {getConfig} = require('./config');
 const _ = require('lodash');
 const utils = {};
