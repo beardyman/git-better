@@ -53,8 +53,7 @@
     "test:cov": "nyc -r lcov -r text-summary  --report-dir test/reports/unit/ npm run test:base",
     "test": "npm run test:ci",
     "test:ci": "npm run test:cov",
-    "test:dev": "npm run test:cov -- -- --watch",
-    "prepare": "husky install"
+    "test:dev": "npm run test:cov -- -- --watch"
   },
   "dependencies": {
     "lodash": "^4.17.20",
