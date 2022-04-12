@@ -20,7 +20,6 @@ const argv = require('minimist')(process.argv.slice(2), scriptArgs);
 
 /**
  * Handles process exiting and error logging
- * Always passes cli args to the main script
  *
  * @param {Function} mainScript - bin script
  * @returns {Promise} - promise to make tests easier

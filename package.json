@@ -60,7 +60,7 @@
     "lodash": "^4.17.20",
     "minimist": "^1.2.5",
     "open": "^7.3.0",
-    "simple-git": "^2.31.0",
+    "simple-git": "^3.6.0",
     "update-notifier": "^5.0.0"
   },
   "devDependencies": {
