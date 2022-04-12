@@ -36,7 +36,7 @@ describe('Update', () => {
     sinon.stub(console, 'log');
 
     update = proxyquire('../../../src/update', {
-      'simple-git/promise': () => git,
+      'simple-git': () => git,
       './config': {getConfig},
       './model/branch': {fromFullBranchName},
       './utils': utils

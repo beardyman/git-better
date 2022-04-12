@@ -28,7 +28,7 @@ describe('Git Pr', () => {
     };
 
     main = proxyquire('../../../src/pr', {
-      'simple-git/promise': () => git,
+      'simple-git': () => git,
       './utils': utils,
       './model/branch': {fromFullBranchName},
       './config': {getConfig},

@@ -33,7 +33,7 @@ describe('Rename', () => {
     sinon.stub(console, 'log');
 
     rename = proxyquire('../../../src/rename', {
-      'simple-git/promise': () => git,
+      'simple-git': () => git,
       './config': {getConfig},
       './model/branch': {fromFullBranchName},
       './utils': utils

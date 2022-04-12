@@ -37,7 +37,7 @@ describe('Finish', () => {
     sinon.stub(console, 'log');
 
     finish = proxyquire('../../../src/finish', {
-      'simple-git/promise': () => git,
+      'simple-git': () => git,
       './config': {getConfig},
       './model/branch': {fromFullBranchName},
       './utils': utils

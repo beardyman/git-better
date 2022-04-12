@@ -21,7 +21,7 @@ describe('Git Open', () => {
     };
 
     main = proxyquire('../../../src/open', {
-      'simple-git/promise': () => git,
+      'simple-git': () => git,
       './utils': utils,
       open
     });

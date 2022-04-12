@@ -41,7 +41,7 @@ describe('Promote', () => {
     sinon.stub(console, 'log');
 
     promote = proxyquire('../../../src/promote', {
-      'simple-git/promise': () => git,
+      'simple-git': () => git,
       './config': {getConfig},
       './model/branch': {fromFullBranchName},
       './utils': utils

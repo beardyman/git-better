@@ -33,7 +33,7 @@ describe('Utils', () => {
     sinon.stub(console, 'log');
 
     utils = proxyquire('../../../src/utils', {
-      'simple-git/promise': () => git,
+      'simple-git': () => git,
       './config': {getConfig}
     });
   });

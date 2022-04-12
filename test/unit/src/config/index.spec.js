@@ -21,7 +21,7 @@ describe('Config', () => {
    */
   function initializeConfig() {
     return proxyquire('../../../../src/config', {
-      'simple-git/promise': () => git,
+      'simple-git': () => git,
       os,
       fs,
       'repoPath/.gbrc': repoConfig,
