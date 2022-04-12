@@ -18,6 +18,11 @@ const scriptArgs = {
 
 const argv = require('minimist')(process.argv.slice(2), scriptArgs);
 
+// alias `push` argument and `--push` option
+if (argv._[0] === 'push') {
+  argv.push = true;
+}
+
 /**
  * Handles process exiting and error logging
  *
