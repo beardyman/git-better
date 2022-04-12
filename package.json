@@ -1,6 +1,6 @@
 {
   "name": "@beardyman/git-better",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "public": true,
   "main": "index.js",
   "author": "@beardyman",
