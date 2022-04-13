@@ -17,10 +17,12 @@ const scriptArgs = {
 };
 
 const argv = require('minimist')(process.argv.slice(2), scriptArgs);
+const _ = require('lodash');
 
-// alias `push` argument and `--push` option
-if (argv._[0] === 'push') {
-  argv.push = true;
+// alias `push` argument with `--push` and `-p` options
+if (_.get(argv, '_[0]') === 'push') {
+  _.set(argv, 'push', true);
+  _.set(argv, 'p', true);
 }
 
 /**

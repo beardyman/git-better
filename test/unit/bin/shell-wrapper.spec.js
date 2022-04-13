@@ -8,7 +8,8 @@ const proxyquire = require('proxyquire').noCallThru();
 describe('Shell Wrapper', () => {
   let wrapper
     , notify
-    , mainFunc;
+    , mainFunc
+    , argv;
 
 
   beforeEach(() => {
@@ -19,9 +20,11 @@ describe('Shell Wrapper', () => {
     sinon.stub(console, 'error');
     sinon.stub(process, 'exit');
 
+    argv = sinon.stub().returns({'_': []});
+
     wrapper = proxyquire('../../../bin/shell-wrapper', {
       'update-notifier': () => ({notify}),
-      'minimist': sinon.stub().returns('demArgs')
+      'minimist': argv
     });
   });
 
@@ -33,7 +36,7 @@ describe('Shell Wrapper', () => {
   it('should wrap the main function and exit when it completes', () => wrapper(mainFunc).then(() => {
     expect(notify.callCount).to.equal(1);
     expect(mainFunc.callCount).to.equal(1);
-    expect(mainFunc.args[0][0]).to.equal('demArgs');
+    expect(mainFunc.args[0][0]).to.deep.equal({'_': []});
     expect(console.error.callCount).to.equal(0);
     expect(process.exit.callCount).to.equal(1);
     expect(process.exit.args[0][0]).to.equal(0);
@@ -45,11 +48,38 @@ describe('Shell Wrapper', () => {
     return wrapper(mainFunc).then(() => {
       expect(notify.callCount).to.equal(1);
       expect(mainFunc.callCount).to.equal(1);
-      expect(mainFunc.args[0][0]).to.equal('demArgs');
+      expect(mainFunc.args[0][0]).to.deep.equal({'_': []});
       expect(console.error.callCount).to.equal(1);
       expect(console.error.args[0][0]).to.equal('nope!');
       expect(process.exit.callCount).to.equal(1);
       expect(process.exit.args[0][0]).to.equal(255);
+    });
+  });
+
+
+  describe('push', () => {
+    beforeEach(() => {
+      notify = sinon.stub();
+      argv.returns({'_': [ 'push' ]});
+
+      // need to re-proxyquire because argv gets evaluated on require of the file
+      wrapper = proxyquire('../../../bin/shell-wrapper', {
+        'update-notifier': () => ({notify}),
+        'minimist': argv
+      });
+    });
+
+    it('should work with `--push` or just `push`', () => {
+      const expectedArgs = {'_': [ 'push' ], push: true, p: true}; // eslint-disable-line id-length
+
+      return wrapper(mainFunc).then(() => {
+        expect(notify.callCount, 'notify').to.equal(1);
+        expect(mainFunc.callCount).to.equal(1);
+        expect(mainFunc.args[0][0]).to.deep.equal(expectedArgs);
+        expect(console.error.callCount).to.equal(0);
+        expect(process.exit.callCount).to.equal(1);
+        expect(process.exit.args[0][0]).to.equal(0);
+      });
     });
   });
 });
