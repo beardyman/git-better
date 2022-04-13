@@ -44,6 +44,7 @@ module.exports.getConfig = async() => {
     config = _.merge(defaultConfig, globalConfig, repoConfig);
   }
 
+  console.log(config);
   return config;
 };
 
