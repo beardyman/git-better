@@ -20,7 +20,7 @@ const argv = require('minimist')(process.argv.slice(2), scriptArgs);
 const _ = require('lodash');
 
 // alias `push` argument with `--push` and `-p` options
-if (_.get(argv, '_[0]') === 'push') {
+if (_.includes(argv._, 'push')) {
   _.set(argv, 'push', true);
   _.set(argv, 'p', true);
 }
