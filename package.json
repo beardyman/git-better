@@ -60,7 +60,7 @@
     "minimist": "^1.2.5",
     "open": "^7.3.0",
     "simple-git": "^3.6.0",
-    "update-notifier": "^5.0.0"
+    "update-notifier": "^6.0.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",
