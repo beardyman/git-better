@@ -56,17 +56,7 @@ module.exports.getConfig = async() => {
  * @returns {Promise<void>} - When complete
  */
 module.exports.initialize = async function(example = false, options = {}) {
-  const exampleDir = `${__dirname}/../../example-configs`;
-  let path;
-
-  if (options.global) {
-    path = `${os.homedir()}/${configFileName}.json`;
-  } else {
-
-    // get repo root path
-    const repoRoot = await git.revparse([ '--show-toplevel' ]);
-    path = `${repoRoot}/${configFileName}.json`;
-  }
+  const path = await getConfigPath(options);
 
   // check to see if it exists so we don't overwrite it
   if (fs.existsSync(path)) {
@@ -78,22 +68,48 @@ module.exports.initialize = async function(example = false, options = {}) {
 
     // lets just make a blank config file
     fs.writeFileSync(path, '{\n\n}');
-
-    // if we want to use an example
-  } else {
-
-    // check to see if theres an example for the example name the user passed
-    const examples = fs.readdirSync(exampleDir)
-      .map((filename) => _.replace(filename, '.json', ''));
-
-    if (examples.includes(example)) {
-
-      // copy the example to the desired location
-      fs.copyFileSync(`${exampleDir}/${example}.json`, path);
-    } else {
-      throw new Error(`An example by that name does not exist. Possible examples are: ${examples.join(', ')}`);
-    }
+    return;
   }
 
-
+  // if we want to use an example
+  copyExampleConfig(example, path);
 };
+
+/**
+ * Gets the path for the config file
+ *
+ * @param {Object} [options] - any options required
+ * @param {boolean} [options.global] - if true, the config will be placed in the current users home directory
+ * @returns {Promise<string>} - path to config file
+ */
+async function getConfigPath(options = {}) {
+  if (options.global) {
+    return `${os.homedir()}/${configFileName}.json`;
+  }
+
+  // get repo root path
+  const repoRoot = await git.revparse([ '--show-toplevel' ]);
+  return `${repoRoot}/${configFileName}.json`;
+}
+
+/**
+ * Copies an example config to the specified path
+ *
+ * @param {string} example - name of the example to copy
+ * @param {string} path - path to copy the example to
+ * @returns {void}
+ */
+function copyExampleConfig(example, path) {
+  const exampleDir = `${__dirname}/../../example-configs`;
+
+  // check to see if theres an example for the example name the user passed
+  const examples = fs.readdirSync(exampleDir)
+    .map((filename) => _.replace(filename, '.json', ''));
+
+  if (!examples.includes(example)) {
+    throw new Error(`An example by that name does not exist. Possible examples are: ${examples.join(', ')}`);
+  }
+
+  // copy the example to the desired location
+  fs.copyFileSync(`${exampleDir}/${example}.json`, path);
+}

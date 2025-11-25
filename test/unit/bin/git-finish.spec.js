@@ -1,6 +1,8 @@
 
 
-const chai = require('chai').use(require('chai-as-promised'));
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised.default);
 const expect = chai.expect;
 const sinon = require('sinon');
 const proxyquire = require('proxyquire').noCallThru();

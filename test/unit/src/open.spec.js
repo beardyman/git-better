@@ -1,5 +1,7 @@
 
-const chai = require('chai').use(require('chai-as-promised'));
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised.default);
 const expect = chai.expect;
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
