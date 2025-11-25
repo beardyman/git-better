@@ -17,7 +17,7 @@ git pr
 ```
 
 ## Installation
-Works with node 12 or newer.
+Works with node 18 or newer.
 
 Also requires `git` to be installed.
 ```shell script 

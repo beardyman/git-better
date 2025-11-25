@@ -7,7 +7,7 @@
   "license": "ISC",
   "description": "CLI Tool-suite for common git workflow operations including workflows",
   "engines": {
-    "node": ">=10"
+    "node": ">=18"
   },
   "repository": {
     "type": "git",
