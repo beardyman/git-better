@@ -1,8 +1,3 @@
-
-// setup notifier for updates
-const pkg = require('../package.json');
-require('update-notifier')({pkg}).notify();
-
 const scriptArgs = {
   string: [ 'remote' ],
   boolean: [ 'branch', 'global', 'merge', 'push', 'rebase' ],
@@ -31,9 +26,24 @@ if (_.includes(argv._, 'push')) {
  * @param {Function} mainScript - bin script
  * @returns {Promise} - promise to make tests easier
  */
-module.exports = (mainScript) => mainScript(argv).then(() => {
-  process.exit(0);
-}).catch((err) => {
-  console.error(err.message);
-  process.exit(255);
-});
+module.exports = async(mainScript) => {
+
+  // Check for updates asynchronously (non-blocking)
+  await (async() => {
+    try {
+      const updateNotifier = await import('update-notifier');
+      const pkg = require('../package.json');
+      updateNotifier.default({pkg}).notify();
+    } catch {
+
+      // Silently fail if update-notifier fails
+    }
+  })();
+
+  return mainScript(argv).then(() => {
+    process.exit(0);
+  }).catch((err) => {
+    console.error(err.message);
+    process.exit(255);
+  });
+};

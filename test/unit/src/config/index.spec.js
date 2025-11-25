@@ -152,5 +152,13 @@ describe('Config', () => {
       expect(fs.writeFileSync.args[0][0]).to.match(/repoPath.*/);
       expect(fs.writeFileSync.args[0][1]).to.equal('{\n\n}');
     }));
+
+    it('should make a blank config locally when global is explicitly false',
+      () => config.initialize(false, {global: false}).then(() => {
+        expect(fs.existsSync.callCount).to.equal(1);
+        expect(fs.writeFileSync.callCount).to.equal(1);
+        expect(fs.writeFileSync.args[0][0]).to.match(/repoPath.*/);
+        expect(fs.writeFileSync.args[0][1]).to.equal('{\n\n}');
+      }));
   });
 });

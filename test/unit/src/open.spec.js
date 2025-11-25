@@ -8,10 +8,11 @@ const sinon = require('sinon');
 
 
 describe('Git Open', () => {
-  let main, git, open, utils;
+  let main, git, open, utils, getOpen;
 
   beforeEach(() => {
     open = sinon.stub();
+    getOpen = sinon.stub().resolves(open);
     sinon.stub(console, 'log');
 
     git = {
@@ -25,7 +26,7 @@ describe('Git Open', () => {
     main = proxyquire('../../../src/open', {
       'simple-git': () => git,
       './utils': utils,
-      open
+      './browser-open': { getOpen }
     });
   });
 

@@ -1,9 +1,9 @@
 const git = require('simple-git')();
-const open = require('open');
 const _ = require('lodash');
 const utils = require('./utils');
 const Branch = require('./model/branch');
 const { getConfig } = require('./config');
+const { getOpen } = require('./browser-open');
 
 /**
  * Helper for creating the helper compare url
@@ -42,12 +42,15 @@ async function main(options = {}) {
     // ensure that tos is always an array for easier logic below
     const tos = workflow ? _.flatten([ workflow.to ]) : [ config.defaultBase ];
 
+    // Dynamically import 'open' as it's an ES module
+    const open = await getOpen();
+
     await Promise.all(_.map(tos, async(toBase) => {
       const prUrl = makePrUrl(baseUrl, toBase, currentBranch.toString());
       if (options.logger) {
         options.logger(`Opening ${prUrl}...`);
       }
-      open(prUrl);
+      await open(prUrl);
     }));
   } else {
     throw new Error('Could not determine remote UI URL');

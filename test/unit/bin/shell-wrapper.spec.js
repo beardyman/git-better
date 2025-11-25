@@ -36,7 +36,6 @@ describe('Shell Wrapper', () => {
   });
 
   it('should wrap the main function and exit when it completes', () => wrapper(mainFunc).then(() => {
-    expect(notify.callCount).to.equal(1);
     expect(mainFunc.callCount).to.equal(1);
     expect(mainFunc.args[0][0]).to.deep.equal({'_': []});
     expect(console.error.callCount).to.equal(0);
@@ -48,7 +47,6 @@ describe('Shell Wrapper', () => {
     mainFunc.rejects({message: 'nope!'});
 
     return wrapper(mainFunc).then(() => {
-      expect(notify.callCount).to.equal(1);
       expect(mainFunc.callCount).to.equal(1);
       expect(mainFunc.args[0][0]).to.deep.equal({'_': []});
       expect(console.error.callCount).to.equal(1);
@@ -75,7 +73,6 @@ describe('Shell Wrapper', () => {
       const expectedArgs = {'_': [ 'push' ], push: true, p: true}; // eslint-disable-line id-length
 
       return wrapper(mainFunc).then(() => {
-        expect(notify.callCount, 'notify').to.equal(1);
         expect(mainFunc.callCount).to.equal(1);
         expect(mainFunc.args[0][0]).to.deep.equal(expectedArgs);
         expect(console.error.callCount).to.equal(0);

@@ -1,6 +1,6 @@
-const open = require('open');
 const git = require('simple-git')();
 const utils = require('./utils');
+const { getOpen } = require('./browser-open');
 
 /**
  * Attempts to get the remote URL of the origin
@@ -29,7 +29,10 @@ async function main(options = {}) {
     if (options.logger) {
       options.logger(`Opening ${url}...`);
     }
-    open(url);
+
+    // Dynamically import 'open' as it's an ES module
+    const open = await getOpen();
+    await open(url);
   } else {
     throw new Error('Could not determine remote UI URL');
   }

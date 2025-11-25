@@ -8,10 +8,11 @@ const sinon = require('sinon');
 
 
 describe('Git Pr', () => {
-  let main, git, open, utils, fromFullBranchName, getConfig;
+  let main, git, open, utils, fromFullBranchName, getConfig, getOpen;
 
   beforeEach(() => {
     open = sinon.stub();
+    getOpen = sinon.stub().resolves(open);
     sinon.stub(console, 'log');
 
     fromFullBranchName = sinon.stub().returns('ns/cBranch');
@@ -34,7 +35,7 @@ describe('Git Pr', () => {
       './utils': utils,
       './model/branch': {fromFullBranchName},
       './config': {getConfig},
-      open
+      './browser-open': { getOpen }
     });
   });
 
