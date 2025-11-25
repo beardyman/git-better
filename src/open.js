@@ -1,5 +1,4 @@
 const open = require('open');
-const _ = require('lodash');
 const git = require('simple-git')();
 const utils = require('./utils');
 
@@ -13,7 +12,7 @@ async function getURL(branchFlag = false) {
 
   if (branchFlag) {
     const currentBranch = await git.branch();
-    remoteUrl = `${_.replace(remoteUrl, '.git', '')}/tree/${currentBranch.current}`;
+    remoteUrl = `${remoteUrl}/tree/${currentBranch.current}`;
   }
 
   return remoteUrl;

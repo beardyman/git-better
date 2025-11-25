@@ -14,7 +14,7 @@ const { getConfig } = require('./config');
  * @returns {string} - the compare (pr) url to open
  */
 function makePrUrl(baseUrl, baseBranch, currentBranch) {
-  return `${_.replace(baseUrl, '.git', '')}/compare/${baseBranch}...${currentBranch}?expand=1`;
+  return `${baseUrl}/compare/${baseBranch}...${currentBranch}?expand=1`;
 }
 
 /**

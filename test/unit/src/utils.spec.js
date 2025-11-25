@@ -22,7 +22,7 @@ describe('Utils', () => {
       pull: sinon.stub().resolves(),
       push: sinon.stub().resolves(),
       branch: sinon.stub().resolves({current: 'ns/cBranch'}),
-      getRemotes: sinon.stub().resolves([{ name: 'origin', refs: {fetch: 'datRemote'}}])
+      getRemotes: sinon.stub().resolves([{ name: 'origin', refs: {fetch: 'https://datRemote.git'}}])
     };
 
     getConfig = sinon.stub().resolves({
@@ -139,14 +139,81 @@ describe('Utils', () => {
 
   describe('getUiUrl', () => {
     it('should return the remote', () => utils.getUiUrl().then((result) => {
-      expect(result).to.equal('datRemote');
+      expect(result).to.equal('https://datRemote');
     }));
 
     it('should handle ssh cloned urls', () => {
-      git.getRemotes.resolves([{ name: 'origin', refs: {fetch: 'git@datUrl.com:withUser'}}]);
+      git.getRemotes.resolves([{ name: 'origin', refs: {fetch: 'git@datUrl.com:withUser/repo.git'}}]);
 
       return utils.getUiUrl().then((results) => {
-        expect(results).to.equal('https://datUrl.com/withUser');
+        expect(results).to.equal('https://datUrl.com/withUser/repo');
+      });
+    });
+
+    describe('normalizeGitUrl (via getUiUrl)', () => {
+      it('should handle git@ SCP-style SSH URLs with .git', () => {
+        git.getRemotes.resolves([{ name: 'origin', refs: {fetch: 'git@github.com:user/repo.git'}}]);
+        return utils.getUiUrl().then((result) => {
+          expect(result).to.equal('https://github.com/user/repo');
+        });
+      });
+
+      it('should handle ssh:// protocol format', () => {
+        git.getRemotes.resolves([{ name: 'origin', refs: {fetch: 'ssh://git@github.com/user/repo.git'}}]);
+        return utils.getUiUrl().then((result) => {
+          expect(result).to.equal('https://github.com/user/repo');
+        });
+      });
+
+      it('should handle ssh:// with custom port', () => {
+        git.getRemotes.resolves([{ name: 'origin', refs: {fetch: 'ssh://git@github.com:22/user/repo.git'}}]);
+        return utils.getUiUrl().then((result) => {
+          expect(result).to.equal('https://github.com/user/repo');
+        });
+      });
+
+      it('should handle HTTPS URLs with .git extension', () => {
+        git.getRemotes.resolves([{ name: 'origin', refs: {fetch: 'https://github.com/user/repo.git'}}]);
+        return utils.getUiUrl().then((result) => {
+          expect(result).to.equal('https://github.com/user/repo');
+        });
+      });
+
+      it('should handle nested repository paths', () => {
+        git.getRemotes.resolves([{ name: 'origin', refs: {fetch: 'git@github.com:org/nested/repo.git'}}]);
+        return utils.getUiUrl().then((result) => {
+          expect(result).to.equal('https://github.com/org/nested/repo');
+        });
+      });
+
+      it('should throw error for unsupported URL format', () => {
+        git.getRemotes.resolves([{ name: 'origin', refs: {fetch: 'ftp://invalid.com/repo'}}]);
+        return expect(utils.getUiUrl()).to.be.rejectedWith('Unsupported remote URL format');
+      });
+
+      it('should throw error when no origin remote exists', () => {
+        git.getRemotes.resolves([{ name: 'upstream', refs: {fetch: 'https://github.com/user/repo.git'}}]);
+        return expect(utils.getUiUrl()).to.be.rejectedWith('No origin remote found');
+      });
+
+      it('should throw error for null remote URL', () => {
+        git.getRemotes.resolves([{ name: 'origin', refs: {fetch: null}}]);
+        return expect(utils.getUiUrl()).to.be.rejectedWith('No origin remote found');
+      });
+
+      it('should throw error for undefined remote URL', () => {
+        git.getRemotes.resolves([{ name: 'origin', refs: {fetch: undefined}}]);
+        return expect(utils.getUiUrl()).to.be.rejectedWith('No origin remote found');
+      });
+
+      it('should throw error for empty string remote URL', () => {
+        git.getRemotes.resolves([{ name: 'origin', refs: {fetch: ''}}]);
+        return expect(utils.getUiUrl()).to.be.rejectedWith('No origin remote found');
+      });
+
+      it('should throw error for non-string remote URL', () => {
+        git.getRemotes.resolves([{ name: 'origin', refs: {fetch: 12345}}]);
+        return expect(utils.getUiUrl()).to.be.rejectedWith('Invalid remote URL: URL must be a non-empty string');
       });
     });
   });

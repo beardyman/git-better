@@ -15,20 +15,71 @@ const utils = {};
 utils.getRemote = (config, options = {}) => options.remote || config.defaultRemote;
 
 /**
+ * Converts SSH URL to HTTPS format
+ *
+ * @param {string} url - SSH URL to convert
+ * @returns {string} - Converted HTTPS URL
+ * @private
+ */
+function convertSshToHttps(url) {
+  let converted = url;
+
+  // Handle ssh:// protocol format: ssh://git@github.com/user/repo.git
+  if (_.startsWith(converted, 'ssh://')) {
+    converted = _.replace(converted, /^ssh:\/\/git@/, 'https://');
+
+    // Remove port specification if present (e.g., :22)
+    converted = _.replace(converted, /:\d+\//, '/');
+  } else if (_.startsWith(converted, 'git@')) {
+
+    // Handle SCP-style format: git@github.com:user/repo.git
+    converted = _.replace(converted, ':', '/');
+    converted = _.replace(converted, 'git@', 'https://');
+  }
+
+  return converted;
+}
+
+/**
+ * Normalizes a Git remote URL to HTTPS format suitable for browser
+ * Handles ssh://, git@, and https:// formats
+ *
+ * @param {string} remoteUrl - Git remote URL in any format
+ * @returns {string} - Normalized HTTPS URL without .git extension
+ * @throws {Error} - If URL format is not recognized
+ * @private
+ */
+function normalizeGitUrl(remoteUrl) {
+  if (!remoteUrl || typeof remoteUrl !== 'string') {
+    throw new Error('Invalid remote URL: URL must be a non-empty string');
+  }
+
+  let normalized = convertSshToHttps(remoteUrl);
+
+  // Validate that we have a valid HTTP/HTTPS URL
+  if (!_.startsWith(normalized, 'http://') && !_.startsWith(normalized, 'https://')) {
+    throw new Error(`Unsupported remote URL format: ${remoteUrl}`);
+  }
+
+  // Remove .git extension if present
+  normalized = _.replace(normalized, /\.git$/, '');
+
+  return normalized;
+}
+
+/**
  * Gets the Ui's base URL
- * @returns {Promise<*>} the base url
+ * @returns {Promise<string>} the base url
  */
 utils.getUiUrl = async() => {
   const remotes = await git.getRemotes(true);
-  let remoteUrl = _.get(_.find(remotes, {name: 'origin'}), 'refs.fetch');
+  const remoteUrl = _.get(_.find(remotes, {name: 'origin'}), 'refs.fetch');
 
-  // handle ssh clones
-  if (_.startsWith(remoteUrl, 'git@')) {
-    remoteUrl = _.replace(remoteUrl, ':', '/'); // replaces `:` before username
-    remoteUrl = _.replace(remoteUrl, 'git@', 'https://');
+  if (!remoteUrl) {
+    throw new Error('No origin remote found');
   }
 
-  return remoteUrl;
+  return normalizeGitUrl(remoteUrl);
 };
 
 /**
